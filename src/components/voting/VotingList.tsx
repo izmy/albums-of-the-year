@@ -4,25 +4,18 @@ import { VotingLine } from "./VotingLine";
 
 interface VotingListProps {
   items: Vote[];
-  onSetVotingList: (vote: Vote[]) => void;
+  onSetVotingList: (vote: Vote, index: number) => void;
 }
 
 export const VotingList: React.FC<VotingListProps> = ({
   items,
   onSetVotingList,
 }) => {
-  const handleVoteItem = (vote, index) => {
-    const newVotingList = [...items];
-    newVotingList[index] = vote;
-
-    onSetVotingList(newVotingList);
-  };
-
   return (
     <div>
       {items.map((vote, index) => (
         <div
-          key={index}
+          key={vote.id}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -30,7 +23,6 @@ export const VotingList: React.FC<VotingListProps> = ({
             margin: "20px 0",
           }}
         >
-          {console.log("vote", vote, index)}
           <span
             style={{
               background: "purple",
@@ -45,10 +37,7 @@ export const VotingList: React.FC<VotingListProps> = ({
           >
             {index + 1}.
           </span>{" "}
-          <VotingLine
-            vote={vote}
-            onSetVote={(vote) => handleVoteItem(vote, index)}
-          />
+          <VotingLine vote={vote} index={vote.id} onSetVote={onSetVotingList} />
         </div>
       ))}
     </div>
