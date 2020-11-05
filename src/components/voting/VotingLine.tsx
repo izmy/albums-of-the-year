@@ -10,15 +10,10 @@ import { Vote } from "./Voting";
 
 interface VotingLineProps {
   vote: Vote;
-  index: number;
-  onSetVote: (vote: Vote, index: number) => void;
+  onSetVote: (vote: Vote) => void;
 }
 
-export const VotingLine: React.FC<VotingLineProps> = ({
-  vote,
-  index,
-  onSetVote,
-}) => {
+export const VotingLine: React.FC<VotingLineProps> = ({ vote, onSetVote }) => {
   const [artists, setArtists] = React.useState<SpotifyArtist[]>([]);
   const [albums, setAlbums] = React.useState<SpotifyAlbumSimplified[]>([]);
 
@@ -28,15 +23,15 @@ export const VotingLine: React.FC<VotingLineProps> = ({
   ) => {
     const newVote = { ...vote, artist: newValue };
 
-    if (newValue !== null && newValue.length > 0) {
-      searchByType(newValue, ["artist"]).then((result) =>
-        setArtists(result.artists.items)
-      );
-    } else {
-      setArtists([]);
-    }
+    // if (newValue !== null && newValue.length > 0) {
+    //   searchByType(newValue, ["artist"]).then((result) =>
+    //     setArtists(result.artists.items)
+    //   );
+    // } else {
+    //   setArtists([]);
+    // }
 
-    onSetVote(newVote, index);
+    onSetVote(newVote);
   };
 
   const handleSearchAlbum = (
@@ -46,20 +41,20 @@ export const VotingLine: React.FC<VotingLineProps> = ({
     const query = `${vote.artist} ${newValue}`;
     const newVote = { ...vote, album: newValue };
 
-    if (query.length > 0) {
-      searchByType(query, ["album"]).then((result) =>
-        setAlbums(result.albums.items)
-      );
-    } else {
-      setAlbums([]);
-    }
+    // if (query.length > 0) {
+    //   searchByType(query, ["album"]).then((result) =>
+    //     setAlbums(result.albums.items)
+    //   );
+    // } else {
+    //   setAlbums([]);
+    // }
 
-    onSetVote(newVote, index);
+    onSetVote(newVote);
   };
 
   const handleWrite = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newVote = { ...vote, write: event.target.checked };
-    onSetVote(newVote, index);
+    onSetVote(newVote);
   };
 
   return (

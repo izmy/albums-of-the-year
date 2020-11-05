@@ -4,7 +4,7 @@ import { VotingLine } from "./VotingLine";
 
 interface VotingListProps {
   items: Vote[];
-  onSetVotingList: (vote: Vote, index: number) => void;
+  onSetVotingList: (vote: Vote) => void;
 }
 
 export const VotingList: React.FC<VotingListProps> = ({
@@ -37,7 +37,7 @@ export const VotingList: React.FC<VotingListProps> = ({
           >
             {index + 1}.
           </span>{" "}
-          <VotingLine vote={vote} index={vote.id} onSetVote={onSetVotingList} />
+          <VotingLine vote={vote} onSetVote={onSetVotingList} />
         </div>
       ))}
     </div>

@@ -19,7 +19,7 @@ export const Voting = () => {
         album: "",
         write: false,
       })
-      .map((vote, i) => ({ ...vote, id: i + 1 }))
+      .map((vote, i) => ({ ...vote, id: i }))
   );
   const [czechAlbums, setCzechAlbums] = React.useState(
     new Array<Vote>(15)
@@ -39,9 +39,9 @@ export const Voting = () => {
     });
   };
 
-  const handleTest = (vote, index) => {
+  const handleTest = (vote) => {
     const votingList = [...foreignAlbums];
-    votingList[index] = vote;
+    votingList[vote.id] = vote;
     setForeignAlbums(votingList);
   };
 
@@ -50,12 +50,7 @@ export const Voting = () => {
       <h2>Zahraniční desky</h2>
       {/* <VotingList items={foreignAlbums} onSetVotingList={handleTest} /> */}
       {foreignAlbums.map((vote) => (
-        <VotingLine
-          key={vote.id}
-          vote={vote}
-          index={vote.id}
-          onSetVote={handleTest}
-        />
+        <VotingLine key={vote.id} vote={vote} onSetVote={handleTest} />
       ))}
 
       {/* <h2>České desky</h2>
