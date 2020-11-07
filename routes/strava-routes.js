@@ -1,5 +1,6 @@
 const axios = require("axios");
 const express = require("express");
+const cors = require("cors");
 const redisClient = require("../db/redis");
 
 const router = express.Router();
@@ -16,8 +17,7 @@ const getStravaAccessToken = () => {
     .catch((err) => console.log(err));
 };
 
-router.get("/", (req, res, next) => {
-  res.append("Access-Control-Allow-Origin", "*");
+router.get("/", cors(), (req, res, next) => {
   redisClient.get("stravaToken", (err, data) => {
     if (err) throw err;
     if (data !== null) {
