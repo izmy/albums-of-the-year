@@ -1,3 +1,11 @@
+export type SpotifyAuthorization = {
+  access_token: string;
+  expires_at: number;
+  expires_in: number;
+  scope: string;
+  token_type: string;
+};
+
 export type SpotifySearchType =
   | "album"
   | "artist"
