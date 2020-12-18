@@ -1,29 +1,10 @@
-const axios = require("axios");
-const express = require("express");
-const qs = require("qs");
-const cors = require("cors");
-const redisClient = require("../db/redis");
+import express from "express";
+import redisClient from "../db/redis";
+import { getSpotifyAccessToken } from "../controllers/spotify";
 
 const router = express.Router();
 
-const getSpotifyAccessToken = () => {
-  return axios
-    .post(
-      "https://accounts.spotify.com/api/token",
-      qs.stringify({
-        grant_type: "client_credentials",
-      }),
-      {
-        headers: {
-          Authorization: process.env.SPOTIFY_AUTHORIZATION,
-        },
-      }
-    )
-    .then((result) => result.data)
-    .catch((err) => console.log(err));
-};
-
-router.get("/", cors(), (req, res, next) => {
+router.get("/", (req, res, next) => {
   redisClient.get("spotifyToken", (err, data) => {
     if (err) throw err;
     if (data !== null) {
@@ -48,4 +29,4 @@ router.get("/", cors(), (req, res, next) => {
   });
 });
 
-module.exports = router;
+export default router;
