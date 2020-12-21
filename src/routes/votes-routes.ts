@@ -1,12 +1,14 @@
 import express from "express";
 import {
-  getAllVotesController,
+  getResults,
+  getUserVotesController,
   saveVotesController,
 } from "../controllers/votes";
 
 const router = express.Router();
 
 router.post("/", saveVotesController);
-router.get("/", getAllVotesController);
+router.get("/", getResults);
+router.get("/:userId", getUserVotesController);
 
 export default router;

@@ -9,6 +9,7 @@ const voteSchema = new mongoose.Schema({
   type: { type: String, required: true },
   userId: { type: ObjectID, required: true },
   date: { type: Date, required: false },
+  points: { type: Number, required: false },
 });
 
 export default mongoose.model("votes", voteSchema);
