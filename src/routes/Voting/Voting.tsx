@@ -4,7 +4,7 @@ import { ChartParameters } from "../../models/charts.types";
 import { Vote } from "../../models/votes.types";
 import { addItemsToCharts, updateChart } from "../../utils/charts.utils";
 import { convertChartsToVotes } from "../../utils/votes.utils";
-import { saveVotes } from "../../services/api/votesApi";
+import { getVotes, saveVotes } from "../../services/api/votesApi";
 import { VotingList } from "./VotingList";
 import SaveIcon from "@material-ui/icons/Save";
 import { UserContext } from "../../services/UserContext";
@@ -21,8 +21,30 @@ export const Voting: React.FC = () => {
   );
 
   const handleSetChart = React.useCallback((vote: Vote) => {
-    setCharts((charts) => charts.map((chart) => updateChart(chart, vote)));
+    setCharts((charts) => {
+      return charts.map((chart) => updateChart(chart, vote));
+    });
   }, []);
+
+  React.useEffect(() => {
+    if (user?.id) {
+      const fetchData = async () => {
+        const oldVotes = await getVotes(user.id);
+
+        for (const oldVote of oldVotes.data) {
+          handleSetChart({
+            rank: oldVote.rank,
+            artist: oldVote.artist,
+            album: oldVote.album,
+            write: oldVote.write,
+            type: oldVote.type,
+          });
+        }
+      };
+
+      fetchData();
+    }
+  }, [user, handleSetChart]);
 
   const handleSubmit = () => {
     const votes = convertChartsToVotes(charts, user!.id);
@@ -31,7 +53,7 @@ export const Voting: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: "center" }}>
       {charts.map((chart) => (
         <VotingList
           key={chart.type}

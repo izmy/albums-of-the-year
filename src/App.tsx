@@ -9,6 +9,7 @@ import {
   createMuiTheme,
   StylesProvider,
   ThemeProvider,
+  CircularProgress,
 } from "@material-ui/core";
 import { MainLayout } from "./components/MainLayout";
 import { Login } from "./routes/Login/Login";
@@ -43,34 +44,56 @@ const PrivateRoute = ({ children, ...rest }) => {
 };
 
 const App = () => {
+  const [loading, setLoading] = React.useState(true);
+  const [token, setToken] = useState(false);
   const [user, setUser] = useState(null);
+
+  const login = React.useCallback((user, token) => {
+    setToken(token);
+    setUser(user);
+  }, []);
+
+  React.useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    const parsedUserData = userData !== null ? JSON.parse(userData) : null;
+
+    if (parsedUserData?.token) {
+      login(parsedUserData.user, parsedUserData.token);
+    }
+
+    setLoading(false);
+  }, [login]);
 
   return (
     <ThemeProvider theme={theme}>
       <StylesProvider injectFirst>
-        <UserContext.Provider value={{ user, setUser }}>
-          <Router>
-            <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/change">
-                <MainLayout>
-                  <Change />
-                </MainLayout>
-              </Route>
-              <PrivateRoute path="/results">
-                <MainLayout>
-                  <Results />
-                </MainLayout>
-              </PrivateRoute>
-              <PrivateRoute path="/">
-                <MainLayout>
-                  <Voting />
-                </MainLayout>
-              </PrivateRoute>
-            </Switch>
-          </Router>
+        <UserContext.Provider value={{ user, setUser, token }}>
+          {loading === true ? (
+            <CircularProgress />
+          ) : (
+            <Router>
+              <Switch>
+                <Route path="/login">
+                  <Login />
+                </Route>
+                <Route path="/change">
+                  <MainLayout>
+                    <Change />
+                  </MainLayout>
+                </Route>
+                <PrivateRoute path="/results">
+                  <MainLayout>
+                    <Results />
+                  </MainLayout>
+                </PrivateRoute>
+                <PrivateRoute path="/">
+                  <MainLayout>
+                    <Voting />
+                  </MainLayout>
+                </PrivateRoute>
+              </Switch>
+            </Router>
+          )}
         </UserContext.Provider>
       </StylesProvider>
     </ThemeProvider>

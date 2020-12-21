@@ -9,15 +9,15 @@ export const getAllVotes = () => {
   });
 };
 
-export const getVotes = (userId: number) => {
-  return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/v1/votes`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    params: {
-      userId,
-    },
-  });
+export const getVotes = (userId: string) => {
+  return axios.get(
+    `${process.env.REACT_APP_BACKEND_API_URL}/v1/votes/${userId}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 export const saveVotes = (votes: Vote[]) => {

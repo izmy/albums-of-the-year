@@ -6,6 +6,10 @@ export const convertChartsToVotes = (charts: Chart[], userId: string): Vote[] =>
     .map((chart) =>
       chart.items
         .filter((vote) => vote.artist !== "" && vote.album !== "")
-        .map((vote) => ({ ...vote, userId }))
+        .map((vote) => ({
+          ...vote,
+          userId,
+          points: chart.size - vote.rank + 1,
+        }))
     )
     .reduce((acc, curr) => acc.concat(curr), []);

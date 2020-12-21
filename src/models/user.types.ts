@@ -12,4 +12,5 @@ export type User = {
 export type UserContextType = {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<null>>;
+  token: boolean | null;
 };

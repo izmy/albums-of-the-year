@@ -13,13 +13,27 @@ export const StyledHeader = styled.header`
   position: relative;
 `;
 
-export const Logout = styled.a`
+export const UserMenu = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.03rem;
+  font-size: 0.9rem;
+`;
+
+export const UserMenuName = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+`;
+
+export const Logout = styled.a`
   display: flex;
   align-items: center;
-  color: white;
+  justify-content: flex-end;
   cursor: pointer;
 
   &:hover {
@@ -28,10 +42,7 @@ export const Logout = styled.a`
 
   span {
     padding-left: 6px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: -0.03rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -49,12 +60,14 @@ export const Header = () => {
       <Link to="/">
         <Logo />
       </Link>
+      <UserMenu>
+        <UserMenuName>{user?.name}</UserMenuName>
+        <Logout onClick={handleLogout}>
+          <ExitToAppIcon fontSize={"small"} />
+          <span>Odhlásit se</span>
+        </Logout>
+      </UserMenu>
       <Navigation />
-      {user?.name}
-      <Logout onClick={handleLogout}>
-        <ExitToAppIcon />
-        <span>Odhlásit se</span>
-      </Logout>
     </StyledHeader>
   );
 };

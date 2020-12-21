@@ -33,11 +33,16 @@ export const Login: React.FC = () => {
   const history = useHistory();
 
   const handleLogin = async (userInfo: ReactFacebookLoginInfo) => {
-    console.log(userInfo);
     if (userInfo.email) {
       const loggedUser = await loginUser(userInfo);
-      console.log(loggedUser.user);
       setUser(loggedUser.user);
+      // localStorage.setItem(
+      //   "userData",
+      //   JSON.stringify({
+      //     user: loggedUser.user,
+      //     token: loggedUser.token,
+      //   })
+      // );
       history.push(state?.from || "/");
     }
   };
