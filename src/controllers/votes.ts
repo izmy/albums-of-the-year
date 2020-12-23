@@ -98,3 +98,42 @@ export const getUserVotesController = async (
     res.status(400).json({ error: "Something went wrong..." });
   }
 };
+
+export const getAllVotes = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const votes = await Vote.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          __v: 0,
+        },
+      },
+    ]);
+    res.json(votes);
+  } catch (err) {
+    res.status(400).json({ error: "Something went wrong..." });
+  }
+};
+
+export const patchVote = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    console.log(req.body.vote);
+    await Vote.updateOne({ _id: req.body.vote._id }, req.body.vote);
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(400).json({ error: "Something went wrong..." });
+  }
+};

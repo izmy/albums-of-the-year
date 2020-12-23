@@ -8,6 +8,7 @@ export interface User extends mongoose.Document {
   accessToken: string;
   password: string;
   role: Role[];
+  picture: string;
 }
 
 const userSchema = new mongoose.Schema({

@@ -24,16 +24,31 @@ export const loginController = async (
     const user = await User.findOne({ email });
 
     if (user !== null) {
-      const token = jwt.sign({ _id: user._id }, "xxx", { expiresIn: "7d" });
-      res.json({ token, user: { id: user._id, name, email, role: user.role } });
+      const token = jwt.sign(
+        { _id: user._id },
+        process.env.JWT_SECRET_KEY ?? ""
+      );
+      res.json({
+        token,
+        user: {
+          id: user._id,
+          name,
+          email,
+          role: user.role,
+          picture: picture.data.url,
+        },
+      });
     } else {
       const newUser = new User({ name, email, picture: picture.data.url });
       newUser.save((err, data) => {
         if (err) {
           return res.status(400).json({ error: "Something went wrong..." });
         }
-        const token = jwt.sign({ _id: data._id }, "xxx", { expiresIn: "7d" });
-        res.json({ token, user: { id: newUser._id, name, email } });
+        const token = jwt.sign(
+          { _id: data._id },
+          process.env.JWT_SECRET_KEY ?? ""
+        );
+        res.json({ token, user: { id: newUser._id, name, email, picture } });
       });
     }
   } catch (err) {
