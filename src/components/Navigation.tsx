@@ -49,7 +49,7 @@ export const StyledNavLink = styled(NavLink)`
 `;
 
 export const Navigation = () => {
-  const { user } = React.useContext(UserContext);
+  const { userData } = React.useContext(UserContext);
 
   return (
     <NavigationList>
@@ -58,7 +58,7 @@ export const Navigation = () => {
           Hlasovat
         </StyledNavLink>
       </Item>
-      {user?.role?.includes("ADMIN") ? (
+      {userData?.user?.role?.includes("ADMIN") ? (
         <Item>
           <StyledNavLink exact to="/change" activeClassName="active">
             Upravit hlasování

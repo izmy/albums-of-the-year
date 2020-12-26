@@ -6,10 +6,9 @@ import {
   Redirect,
 } from "react-router-dom";
 import {
-  createMuiTheme,
+  unstable_createMuiStrictModeTheme as createMuiTheme,
   StylesProvider,
   ThemeProvider,
-  CircularProgress,
 } from "@material-ui/core";
 import { MainLayout } from "./components/MainLayout";
 import { Login } from "./routes/Login/Login";
@@ -18,17 +17,25 @@ import { Change } from "./routes/Change/Change";
 import { Results } from "./routes/Results/Results";
 import { useState } from "react";
 import { UserContext } from "./services/UserContext";
+import { authorize, getUser } from "./services/api/usersApi";
+import { LoadingSpinner } from "./components/LoadingSpinner";
 
-const theme = createMuiTheme({});
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#007dc5",
+    },
+  },
+});
 
 const PrivateRoute = ({ children, ...rest }) => {
-  const { user } = React.useContext(UserContext);
+  const { userData } = React.useContext(UserContext);
 
   return (
     <Route
       {...rest}
       render={({ location }) => {
-        return user !== null ? (
+        return userData !== null ? (
           children
         ) : (
           <Redirect
@@ -45,31 +52,39 @@ const PrivateRoute = ({ children, ...rest }) => {
 
 const App = () => {
   const [loading, setLoading] = React.useState(true);
-  const [token, setToken] = useState(false);
-  const [user, setUser] = useState(null);
-
-  const login = React.useCallback((user, token) => {
-    setToken(token);
-    setUser(user);
-  }, []);
+  const [userData, setUserData] = useState<any>(null);
 
   React.useEffect(() => {
-    const userData = localStorage.getItem("userData");
-    const parsedUserData = userData !== null ? JSON.parse(userData) : null;
+    const checkLoggedIn = async () => {
+      let token = localStorage.getItem("auth-token");
+      if (token === null) {
+        localStorage.setItem("auth-token", "");
+        token = "";
+      }
 
-    if (parsedUserData?.token) {
-      login(parsedUserData.user, parsedUserData.token);
-    }
+      const tokenResponse = await authorize(token);
+      if (tokenResponse) {
+        const loggedUser = await getUser();
+        setUserData({
+          token,
+          user: {
+            ...loggedUser,
+            id: loggedUser._id,
+          },
+        });
+      }
+      setLoading(false);
+    };
 
-    setLoading(false);
-  }, [login]);
+    checkLoggedIn();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <StylesProvider injectFirst>
-        <UserContext.Provider value={{ user, setUser, token }}>
+        <UserContext.Provider value={{ userData, setUserData }}>
           {loading === true ? (
-            <CircularProgress />
+            <LoadingSpinner fullscreen={true} />
           ) : (
             <Router>
               <Switch>

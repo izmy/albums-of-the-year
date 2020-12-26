@@ -3,7 +3,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Logo } from "./Logo";
 import { Navigation } from "./Navigation";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../services/UserContext";
 
 export const StyledHeader = styled.header`
@@ -30,6 +30,12 @@ export const UserMenuName = styled.span`
   margin-bottom: 6px;
 `;
 
+export const IconPhoto = styled.img`
+  border-radius: 50%;
+  margin-right: 10px;
+  max-height: 35px;
+`;
+
 export const Logout = styled.a`
   display: flex;
   align-items: center;
@@ -47,13 +53,14 @@ export const Logout = styled.a`
 `;
 
 export const Header = () => {
-  const { user, setUser } = React.useContext(UserContext);
+  const { userData, setUserData } = React.useContext(UserContext);
+  const history = useHistory();
 
   const handleLogout = () => {
-    setUser(null);
+    setUserData(null);
+    localStorage.removeItem("auth-token");
+    history.push("/login");
   };
-
-  console.log(user);
 
   return (
     <StyledHeader>
@@ -61,7 +68,10 @@ export const Header = () => {
         <Logo />
       </Link>
       <UserMenu>
-        <UserMenuName>{user?.name}</UserMenuName>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <IconPhoto src={userData?.user?.picture} alt={userData?.user?.name} />
+          <UserMenuName>{userData?.user?.name}</UserMenuName>
+        </div>
         <Logout onClick={handleLogout}>
           <ExitToAppIcon fontSize={"small"} />
           <span>Odhlásit se</span>

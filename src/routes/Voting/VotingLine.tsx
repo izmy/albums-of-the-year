@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel, Grid, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import * as React from "react";
 import {
   SpotifyAlbumSimplified,
@@ -31,12 +31,12 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
     const [albums, setAlbums] = React.useState<SpotifyAlbumSimplified[]>([]);
 
     const handleSearchArtist = (
-      _event: React.ChangeEvent<{}>,
+      event: React.ChangeEvent<{}>,
       newValue: string | null
     ) => {
       const newVote = { ...vote, artist: newValue };
 
-      if (newValue !== null && newValue.length > 0) {
+      if (newValue !== null && newValue.length > 0 && event !== null) {
         searchByType(newValue, ["artist"]).then((result) =>
           setArtists(result.artists.items)
         );
@@ -48,13 +48,13 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
     };
 
     const handleSearchAlbum = (
-      _event: React.ChangeEvent<{}>,
+      event: React.ChangeEvent<{}>,
       newValue: string | null
     ) => {
       const query = `${vote.artist} ${newValue}`;
       const newVote = { ...vote, album: newValue };
 
-      if (query.length > 0) {
+      if (query.length > 0 && event !== null) {
         searchByType(query, ["album"]).then((result) =>
           setAlbums(result.albums.items)
         );
@@ -86,22 +86,57 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
               return option.name;
             }}
             style={{ width: 300 }}
+            inputValue={vote.artist ?? ""}
             onInputChange={handleSearchArtist}
             renderInput={(params) => (
               <TextField {...params} label="Interpret" variant="outlined" />
             )}
+            filterOptions={(options, params) => {
+              const filtered = createFilterOptions<SpotifyArtist>()(
+                options,
+                params
+              );
+
+              if (params.inputValue !== "" && filtered.length <= 0) {
+                filtered.push({
+                  name: params.inputValue,
+                } as SpotifyArtist);
+              }
+
+              return filtered;
+            }}
           />
         </Grid>
         <Grid item>
           <Autocomplete
             freeSolo
             options={albums}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option) => {
+              if (option.name === undefined) {
+                return (option as unknown) as string;
+              }
+              return option.name;
+            }}
+            inputValue={vote.album ?? ""}
             style={{ width: 300 }}
             onInputChange={handleSearchAlbum}
             renderInput={(params) => (
               <TextField {...params} label="Album" variant="outlined" />
             )}
+            filterOptions={(options, params) => {
+              const filtered = createFilterOptions<SpotifyAlbumSimplified>()(
+                options,
+                params
+              );
+
+              if (params.inputValue !== "" && filtered.length <= 0) {
+                filtered.push({
+                  name: params.inputValue,
+                } as SpotifyAlbumSimplified);
+              }
+
+              return filtered;
+            }}
           />
         </Grid>
         <Grid item>

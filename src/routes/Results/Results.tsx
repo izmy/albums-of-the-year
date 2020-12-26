@@ -1,13 +1,7 @@
-import { CircularProgress } from "@material-ui/core";
 import * as React from "react";
-import styled from "styled-components";
-import { getAllVotes } from "../../services/api/votesApi";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { getResults } from "../../services/api/resultsApi";
 import { ResultsTable } from "./ResultsTable";
-
-const Title = styled.h2`
-  font-size: 2rem;
-  text-align: center;
-`;
 
 export const Results: React.FC = () => {
   const [votes, setVotes] = React.useState<any>([]);
@@ -15,7 +9,7 @@ export const Results: React.FC = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const allVotes = await getAllVotes();
+      const allVotes = await getResults();
 
       setVotes(allVotes.data);
       setLoading(false);
@@ -24,29 +18,23 @@ export const Results: React.FC = () => {
     fetchData();
   }, []);
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <div>
-      <Title>Výsledky hlasování</Title>
+      <h1>Výsledky hlasování</h1>
 
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <>
-          <Title>Zahraniční desky</Title>
-          <ResultsTable
-            rows={
-              votes.filter((vote) => vote.type === "global")[0]?.results ?? []
-            }
-          />
+      <h2>Zahraniční desky</h2>
+      <ResultsTable
+        rows={votes.filter((vote) => vote.type === "global")[0]?.results ?? []}
+      />
 
-          <Title>České desky</Title>
-          <ResultsTable
-            rows={
-              votes.filter((vote) => vote.type === "czech")[0]?.results ?? []
-            }
-          />
-        </>
-      )}
+      <h2>České desky</h2>
+      <ResultsTable
+        rows={votes.filter((vote) => vote.type === "czech")[0]?.results ?? []}
+      />
     </div>
   );
 };

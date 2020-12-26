@@ -3,11 +3,6 @@ import { VotingLine } from "./VotingLine";
 import styled from "styled-components";
 import { Vote } from "../../models/votes.types";
 
-const Title = styled.h2`
-  font-size: 2rem;
-  text-align: center;
-`;
-
 const OrderList = styled.ol`
   padding: 0;
   margin-bottom: 50px;
@@ -33,10 +28,10 @@ export const VotingList: React.FC<VotingListProps> = ({
 }) => {
   return (
     <div>
-      <Title>{heading}</Title>
+      <h2>{heading}</h2>
       <OrderList>
         {items.map((vote) => (
-          <OrderListItem key={vote.rank}>
+          <OrderListItem key={`${vote.type}-${vote.rank}`}>
             <VotingLine vote={vote} onSetVote={onSetVotingList} />
           </OrderListItem>
         ))}
