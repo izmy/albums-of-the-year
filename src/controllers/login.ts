@@ -31,7 +31,7 @@ export const loginController = async (
       res.json({
         token,
         user: {
-          id: user._id,
+          _id: user._id,
           name,
           email,
           role: user.role,
@@ -48,7 +48,7 @@ export const loginController = async (
           { _id: data._id },
           process.env.JWT_SECRET_KEY ?? ""
         );
-        res.json({ token, user: { id: newUser._id, name, email, picture } });
+        res.json({ token, user: { _id: newUser._id, name, email, picture } });
       });
     }
   } catch (err) {

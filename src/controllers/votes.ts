@@ -16,76 +16,6 @@ export const saveVotesController = async (
   }
 };
 
-export const getResults = async (
-  req: express.Request,
-  res: express.Response
-) => {
-  const votes = await Vote.aggregate([
-    {
-      $lookup: {
-        from: "users",
-        localField: "userId",
-        foreignField: "_id",
-        as: "user",
-      },
-    },
-    {
-      $group: {
-        _id: {
-          artist: "$artist",
-          album: "$album",
-        },
-        artist: {
-          $first: "$artist",
-        },
-        album: {
-          $first: "$album",
-        },
-        ranks: {
-          $push: "$rank",
-        },
-        points: {
-          $sum: "$points",
-        },
-        voters: {
-          $push: "$user",
-        },
-        type: {
-          $first: "$type",
-        },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-      },
-    },
-    {
-      $sort: {
-        points: -1,
-      },
-    },
-    {
-      $group: {
-        _id: "$type",
-        type: {
-          $first: "$type",
-        },
-        results: {
-          $push: "$$ROOT",
-        },
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-      },
-    },
-  ]);
-
-  res.json(votes);
-};
-
 export const getUserVotesController = async (
   req: express.Request,
   res: express.Response
@@ -93,9 +23,9 @@ export const getUserVotesController = async (
   try {
     const userId = mongoose.Types.ObjectId(req.params.userId);
     const votes = await Vote.find({ userId });
-    res.json(votes);
+    return res.json(votes);
   } catch (err) {
-    res.status(400).json({ error: "Something went wrong..." });
+    return res.status(400).json({ error: "Something went wrong..." });
   }
 };
 
@@ -104,24 +34,10 @@ export const getAllVotes = async (
   res: express.Response
 ) => {
   try {
-    const votes = await Vote.aggregate([
-      {
-        $lookup: {
-          from: "users",
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $project: {
-          __v: 0,
-        },
-      },
-    ]);
-    res.json(votes);
+    const votes = await Vote.find();
+    return res.json(votes);
   } catch (err) {
-    res.status(400).json({ error: "Something went wrong..." });
+    return res.status(400).json({ error: "Something went wrong..." });
   }
 };
 
@@ -130,10 +46,9 @@ export const patchVote = async (
   res: express.Response
 ) => {
   try {
-    console.log(req.body.vote);
     await Vote.updateOne({ _id: req.body.vote._id }, req.body.vote);
-    res.sendStatus(200);
+    return res.sendStatus(200);
   } catch (err) {
-    res.status(400).json({ error: "Something went wrong..." });
+    return res.status(400).json({ error: "Something went wrong..." });
   }
 };

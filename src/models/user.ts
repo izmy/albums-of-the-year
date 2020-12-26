@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
-export type Role = "ADMIN" | "VOTER" | "EDITOR";
+export enum Role {
+  ADMIN = "ADMIN",
+  VOTER = "VOTER",
+  EDITOR = "EDITOR",
+}
 
 export interface User extends mongoose.Document {
   name: string;

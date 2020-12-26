@@ -1,18 +1,17 @@
 import express from "express";
 import {
   getAllVotes,
-  getResults,
   getUserVotesController,
   patchVote,
   saveVotesController,
 } from "../controllers/votes";
+import { auth } from "../middleware/auth";
 
 const router = express.Router();
 
-router.post("/", saveVotesController);
-router.get("/", getResults);
-router.get("/all", getAllVotes);
-router.patch("/update/:voteId", patchVote);
-router.get("/:userId", getUserVotesController);
+router.post("/", auth, saveVotesController);
+router.get("/all", auth, getAllVotes);
+router.patch("/update/:voteId", auth, patchVote);
+router.get("/:userId", auth, getUserVotesController);
 
 export default router;
