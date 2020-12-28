@@ -24,10 +24,15 @@ export const UserMenu = styled.div`
   font-size: 0.9rem;
 `;
 
+export const UserMenuBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
+
 export const UserMenuName = styled.span`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 6px;
 `;
 
 export const IconPhoto = styled.img`
@@ -68,10 +73,13 @@ export const Header = () => {
         <Logo />
       </Link>
       <UserMenu>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <IconPhoto src={userData?.user?.picture} alt={userData?.user?.name} />
+        <UserMenuBox>
+          <IconPhoto
+            src={userData?.user?.picture ?? "images/user.jpg"}
+            alt={userData?.user?.name}
+          />
           <UserMenuName>{userData?.user?.name}</UserMenuName>
-        </div>
+        </UserMenuBox>
         <Logout onClick={handleLogout}>
           <ExitToAppIcon fontSize={"small"} />
           <span>Odhlásit se</span>

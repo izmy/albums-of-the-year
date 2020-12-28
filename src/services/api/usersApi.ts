@@ -1,13 +1,38 @@
 import axios from "axios";
 import { UserListItem } from "../../models/user.types";
 
-export const loginUser = async (userInfo) => {
+export const loginUser = async (email, password) => {
   const user = await axios.post(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/login`,
+    {
+      email,
+      password,
+    }
+  );
+
+  return user.data;
+};
+
+export const loginUserFacebook = async (userInfo) => {
+  const user = await axios.post(
+    `${process.env.REACT_APP_BACKEND_API_URL}/v1/login/facebook`,
     {
       accessToken: userInfo.accessToken,
       userID: userInfo.userID,
       email: userInfo.email,
+    }
+  );
+
+  return user.data;
+};
+
+export const registerUser = async (name, email, password) => {
+  const user = await axios.post(
+    `${process.env.REACT_APP_BACKEND_API_URL}/v1/users`,
+    {
+      name,
+      email,
+      password,
     }
   );
 

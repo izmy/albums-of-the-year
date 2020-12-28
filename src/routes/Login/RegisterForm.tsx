@@ -2,21 +2,30 @@ import * as React from "react";
 import InputIcon from "@material-ui/icons/Input";
 import { LoginButton, LoginItem, LoginTitle, StyledTextField } from "./Login";
 
-interface LoginFormProps {
-  onLogin: (email: string, password: string) => void;
+interface RegisterFormProps {
+  onRegister: (name: string, email: string, password: string) => void;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+export const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
+  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleLogin = () => {
-    onLogin(email, password);
+  const handleRegister = () => {
+    onRegister(name, email, password);
   };
 
   return (
     <>
-      <LoginTitle>Přihlášení</LoginTitle>
+      <LoginTitle>Registrace</LoginTitle>
+      <LoginItem>
+        <StyledTextField
+          label="Jméno"
+          variant="filled"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+      </LoginItem>
       <LoginItem>
         <StyledTextField
           label="Email"
@@ -39,9 +48,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           variant="contained"
           color="primary"
           startIcon={<InputIcon />}
-          onClick={handleLogin}
+          onClick={handleRegister}
         >
-          Přihlásit se
+          Registrovat se
         </LoginButton>
       </LoginItem>
     </>
