@@ -1,9 +1,10 @@
 import * as express from "express";
+import bcrypt from "bcrypt";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 
-export const loginController = async (
+export const loginFacebookController = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -51,6 +52,46 @@ export const loginController = async (
         res.json({ token, user: { _id: newUser._id, name, email, picture } });
       });
     }
+  } catch (err) {
+    res.status(400).json({ error: "Something went wrong..." });
+  }
+};
+
+export const loginController = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (user === null) {
+      return res
+        .status(400)
+        .json({ msg: `Uživatel s emailem "${email}" nenalezen.` });
+    }
+
+    if (user.password === undefined) {
+      return res.status(400).json({ msg: `Přihlašte se přes Facebook.` });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    if (!validPassword) {
+      return res.status(400).json({ msg: `Zadané heslo je neplatné.` });
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY ?? "");
+    return res.json({
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (err) {
     res.status(400).json({ error: "Something went wrong..." });
   }
