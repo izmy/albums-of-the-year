@@ -15,6 +15,27 @@ export const getResults = async (
       },
     },
     {
+      $unwind: {
+        path: "$user",
+      },
+    },
+    {
+      $project: {
+        type: 1,
+        points: 1,
+        artist: 1,
+        album: 1,
+        rank: 1,
+        writeByUser: {
+          $cond: {
+            if: "$write",
+            then: "$user.name",
+            else: null,
+          },
+        },
+      },
+    },
+    {
       $group: {
         _id: {
           artist: "$artist",
@@ -32,22 +53,39 @@ export const getResults = async (
         points: {
           $sum: "$points",
         },
-        voters: {
-          $push: "$user",
-        },
         type: {
           $first: "$type",
+        },
+        writeByUser: {
+          $push: "$writeByUser",
         },
       },
     },
     {
       $project: {
-        _id: 0,
+        type: 1,
+        points: 1,
+        artist: 1,
+        album: 1,
+        ranks: 1,
+        writeByUser: {
+          $arrayElemAt: [
+            {
+              $filter: {
+                input: "$writeByUser",
+                as: "a",
+                cond: { $ne: ["$$a", null] },
+              },
+            },
+            0,
+          ],
+        },
       },
     },
     {
       $sort: {
         points: -1,
+        ranks: -1,
       },
     },
     {

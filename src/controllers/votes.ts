@@ -7,10 +7,21 @@ export const saveVotesController = async (
   res: express.Response
 ) => {
   try {
-    const userId = mongoose.Types.ObjectId(req.body[0]?.userId);
-    await Vote.deleteMany({ userId });
-    await Vote.insertMany(req.body);
-    res.sendStatus(200);
+    const userId = req.body.userId;
+    const userVotes = await Vote.find({ userId });
+
+    try {
+      await Vote.deleteMany({ userId });
+      await Vote.insertMany(req.body);
+      res.sendStatus(200);
+    } catch (err) {
+      if (userVotes !== null) {
+        await Vote.insertMany(userVotes);
+      }
+      res
+        .status(400)
+        .json({ error: "Something went wrong, old votes was restored..." });
+    }
   } catch (err) {
     res.status(400).json({ error: "Something went wrong..." });
   }
