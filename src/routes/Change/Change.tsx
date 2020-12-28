@@ -1,12 +1,20 @@
 import * as React from "react";
 import styled from "styled-components";
-import { TextField } from "@material-ui/core";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TextField,
+} from "@material-ui/core";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { UserList } from "../../models/user.types";
 import { Vote } from "../../models/votes.types";
 import { getAllUsers } from "../../services/api/usersApi";
 import { getAllVotes, updateVote } from "../../services/api/votesApi";
 import { ChangeItem } from "./ChangeItem";
+import { StyledTableCell, StyledTableRow } from "../Results/ResultsTable";
 
 const FilterTextField = styled(TextField)`
   width: 100%;
@@ -94,15 +102,32 @@ export const Change: React.FC = () => {
         onChange={handleFilter}
       />
 
-      {filteredVotes.map((vote) => (
-        <ChangeItem
-          key={vote._id}
-          users={users}
-          vote={vote}
-          onChangeVotes={handleChangeVotes}
-          onSaveVote={handleSaveVote}
-        />
-      ))}
+      <TableContainer component={Paper}>
+        <Table aria-label="Tabulka pro úpravu hlasů">
+          <TableHead>
+            <StyledTableRow>
+              <StyledTableCell>#</StyledTableCell>
+              <StyledTableCell>Interpret</StyledTableCell>
+              <StyledTableCell>Album</StyledTableCell>
+              <StyledTableCell>Hlasující</StyledTableCell>
+              <StyledTableCell align="center">Chce psát</StyledTableCell>
+              <StyledTableCell align="center">Píše</StyledTableCell>
+              <StyledTableCell>Akce</StyledTableCell>
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            {filteredVotes.map((vote) => (
+              <ChangeItem
+                key={vote._id}
+                users={users}
+                vote={vote}
+                onChangeVotes={handleChangeVotes}
+                onSaveVote={handleSaveVote}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };

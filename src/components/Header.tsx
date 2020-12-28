@@ -6,14 +6,13 @@ import styled from "styled-components";
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../services/UserContext";
 
-export const StyledHeader = styled.header`
+const StyledHeader = styled.header`
   background-image: linear-gradient(160deg, #004eb5, #41acf3);
-  padding: 3rem 0 0;
   text-align: center;
   position: relative;
 `;
 
-export const UserMenu = styled.div`
+const UserMenu = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
@@ -22,30 +21,54 @@ export const UserMenu = styled.div`
   text-transform: uppercase;
   letter-spacing: -0.03rem;
   font-size: 0.9rem;
+
+  @media (max-width: 990px) {
+    position: relative;
+    top: auto;
+    right: auto;
+    padding: 20px 0;
+    background: linear-gradient(160deg, #00306f, #00558e);
+  }
 `;
 
-export const UserMenuBox = styled.div`
+const UserMenuBox = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  @media (max-width: 990px) {
+    justify-content: center;
+  }
 `;
 
-export const UserMenuName = styled.span`
+const UserMenuName = styled.span`
   display: flex;
   justify-content: flex-end;
 `;
 
-export const IconPhoto = styled.img`
+const IconPhoto = styled.img`
   border-radius: 50%;
   margin-right: 10px;
   max-height: 35px;
 `;
 
-export const Logout = styled.a`
+const LogoContainer = styled.div`
+  padding: 3rem 0 0;
+
+  @media (max-width: 990px) {
+    padding: 2rem 0 0;
+  }
+`;
+
+const Logout = styled.a`
   display: flex;
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
+
+  @media (max-width: 990px) {
+    justify-content: center;
+  }
 
   &:hover {
     text-decoration: underline;
@@ -69,9 +92,6 @@ export const Header = () => {
 
   return (
     <StyledHeader>
-      <Link to="/">
-        <Logo />
-      </Link>
       <UserMenu>
         <UserMenuBox>
           <IconPhoto
@@ -85,6 +105,11 @@ export const Header = () => {
           <span>Odhlásit se</span>
         </Logout>
       </UserMenu>
+      <LogoContainer>
+        <Link to="/">
+          <Logo />
+        </Link>
+      </LogoContainer>
       <Navigation />
     </StyledHeader>
   );

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   TableContainer,
   Table,
@@ -11,7 +10,7 @@ import {
 } from "@material-ui/core";
 import styled from "styled-components";
 
-const StyledTableCell = styled(TableCell)`
+export const StyledTableCell = styled(TableCell)`
   &.MuiTableCell-head {
     color: white;
     background: #2c94e2;
@@ -19,24 +18,16 @@ const StyledTableCell = styled(TableCell)`
   }
 `;
 
-const StyledTableRow = styled(TableRow)`
+export const StyledTableRow = styled(TableRow)`
   &:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, 0.04);
   }
 `;
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-
 export const ResultsTable = ({ rows }) => {
-  const classes = useStyles();
-
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="Tabulka výsledků">
+      <Table aria-label="Tabulka výsledků">
         <TableHead>
           <StyledTableRow>
             <StyledTableCell>#</StyledTableCell>
@@ -44,6 +35,7 @@ export const ResultsTable = ({ rows }) => {
             <StyledTableCell>Album</StyledTableCell>
             <StyledTableCell>Hlasy</StyledTableCell>
             <StyledTableCell>Body</StyledTableCell>
+            <StyledTableCell>Píše</StyledTableCell>
           </StyledTableRow>
         </TableHead>
         <TableBody>
@@ -52,10 +44,11 @@ export const ResultsTable = ({ rows }) => {
               <StyledTableCell scope="row">{index + 1}.</StyledTableCell>
               <StyledTableCell scope="row">{row.artist}</StyledTableCell>
               <StyledTableCell scope="row">{row.album}</StyledTableCell>
-              <StyledTableCell scope="row">
-                {row.voters?.length}
-              </StyledTableCell>
+              <StyledTableCell scope="row">{row.ranks.length}</StyledTableCell>
               <StyledTableCell scope="row">{row.points}</StyledTableCell>
+              <StyledTableCell scope="row">
+                {row.writeByUser ? row.writeByUser : "-"}
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Grid, TextField } from "@material-ui/core";
+import { Checkbox, TextField } from "@material-ui/core";
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import * as React from "react";
 import {
@@ -7,25 +7,15 @@ import {
 } from "../../models/spotify.types";
 import { Vote } from "../../models/votes.types";
 import { searchByType } from "../../services/api/spotifyApi";
-import styled from "styled-components";
+import { RankBullet } from "../../components/RankBullet";
+import { StyledTableCell, StyledTableRow } from "../Results/ResultsTable";
 
-const VotingLineRank = styled.span<{ size: number }>`
-  background: #007dc5;
-  color: white;
-  border-radius: 50%;
-  width: ${(props) => props.size}px;
-  height: ${(props) => props.size}px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-interface VotingLineProps {
+interface VotingListItemProps {
   vote: Vote;
   onSetVote: (vote: Vote) => void;
 }
 
-export const VotingLine: React.FC<VotingLineProps> = React.memo(
+export const VotingListItem: React.FC<VotingListItemProps> = React.memo(
   ({ vote, onSetVote }) => {
     const [artists, setArtists] = React.useState<SpotifyArtist[]>([]);
     const [albums, setAlbums] = React.useState<SpotifyAlbumSimplified[]>([]);
@@ -65,17 +55,17 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
       onSetVote(newVote);
     };
 
-    const handleWrite = () => {
-      const newVote = { ...vote, write: !vote.write };
+    const handleWantWrite = () => {
+      const newVote = { ...vote, wantWrite: !vote.wantWrite };
       onSetVote(newVote);
     };
 
     return (
-      <Grid container alignItems="center" justify="center" spacing={3}>
-        <Grid item>
-          <VotingLineRank size={30}>{vote.rank}.</VotingLineRank>
-        </Grid>
-        <Grid item>
+      <StyledTableRow>
+        <StyledTableCell component="th" scope="row">
+          <RankBullet value={vote.rank} size={30} />
+        </StyledTableCell>
+        <StyledTableCell>
           <Autocomplete
             freeSolo
             options={artists}
@@ -85,7 +75,7 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
               }
               return option.name;
             }}
-            style={{ width: 300 }}
+            style={{ width: 280 }}
             inputValue={vote.artist ?? ""}
             onInputChange={handleSearchArtist}
             renderInput={(params) => (
@@ -106,8 +96,8 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
               return filtered;
             }}
           />
-        </Grid>
-        <Grid item>
+        </StyledTableCell>
+        <StyledTableCell>
           <Autocomplete
             freeSolo
             options={albums}
@@ -118,7 +108,7 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
               return option.name;
             }}
             inputValue={vote.album ?? ""}
-            style={{ width: 300 }}
+            style={{ width: 280 }}
             onInputChange={handleSearchAlbum}
             renderInput={(params) => (
               <TextField {...params} label="Album" variant="outlined" />
@@ -138,21 +128,16 @@ export const VotingLine: React.FC<VotingLineProps> = React.memo(
               return filtered;
             }}
           />
-        </Grid>
-        <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={vote.write}
-                onChange={handleWrite}
-                onKeyPress={handleWrite}
-                name="write"
-              />
-            }
-            label="Chci psát"
+        </StyledTableCell>
+        <StyledTableCell align="center">
+          <Checkbox
+            checked={vote.wantWrite}
+            onChange={handleWantWrite}
+            onKeyPress={handleWantWrite}
+            name="wantWrite"
           />
-        </Grid>
-      </Grid>
+        </StyledTableCell>
+      </StyledTableRow>
     );
   }
 );

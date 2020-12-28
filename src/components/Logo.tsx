@@ -10,6 +10,11 @@ const StyledSvg = styled.svg<StyledSvgProps>`
   width: 100%;
   max-width: ${({ maxWidth }) => maxWidth}px;
 
+  @media (max-width: ${({ maxWidth }) => maxWidth + 40}px) {
+    max-width: calc(100% - 40px);
+    margin: 0 20px;
+  }
+
   #text {
     fill: white;
   }

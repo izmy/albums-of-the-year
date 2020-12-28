@@ -13,6 +13,7 @@ describe("Charts utils", () => {
       artist: "",
       rank: 1,
       type: "test",
+      wantWrite: false,
       write: false,
     };
 
@@ -30,7 +31,16 @@ describe("Charts utils", () => {
       title: "Global charts",
       type: "test",
       size: 1,
-      items: [{ album: "", artist: "", rank: 1, type: "test", write: false }],
+      items: [
+        {
+          album: "",
+          artist: "",
+          rank: 1,
+          type: "test",
+          wantWrite: false,
+          write: false,
+        },
+      ],
     };
 
     expect(addItemsToCharts(inputChartParameters)).toEqual(expectedChart);
@@ -47,6 +57,7 @@ describe("Charts utils", () => {
           artist: "bandA",
           rank: 1,
           type: "global",
+          wantWrite: false,
           write: false,
         },
         {
@@ -54,6 +65,7 @@ describe("Charts utils", () => {
           artist: "bandB",
           rank: 2,
           type: "global",
+          wantWrite: false,
           write: false,
         },
       ],
@@ -64,7 +76,8 @@ describe("Charts utils", () => {
       artist: "bandC",
       rank: 1,
       type: "global",
-      write: true,
+      wantWrite: true,
+      write: false,
     };
 
     const expectedChart: Chart = {
@@ -77,13 +90,15 @@ describe("Charts utils", () => {
           artist: "bandC",
           rank: 1,
           type: "global",
-          write: true,
+          wantWrite: true,
+          write: false,
         },
         {
           album: "xyz",
           artist: "bandB",
           rank: 2,
           type: "global",
+          wantWrite: false,
           write: false,
         },
       ],

@@ -19,6 +19,11 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 10px;
+
+  @media (max-height: 660px) {
+    height: auto;
+  }
 `;
 
 const LoginBox = styled.div`

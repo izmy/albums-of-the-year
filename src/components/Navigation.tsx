@@ -8,6 +8,10 @@ export const NavigationList = styled.ul`
   padding: 0;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 export const Item = styled.li`
@@ -45,6 +49,14 @@ export const StyledNavLink = styled(NavLink)`
     &:after {
       width: calc(100% - 2rem);
     }
+  }
+
+  @media (max-width: 700px) {
+    margin: 1rem 0;
+  }
+
+  @media (max-width: 600px) {
+    margin: 0.2rem 1rem;
   }
 `;
 

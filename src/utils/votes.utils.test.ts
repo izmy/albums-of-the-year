@@ -15,6 +15,7 @@ describe("Votes utils", () => {
             artist: "bandA",
             rank: 1,
             type: "global",
+            wantWrite: false,
             write: false,
           },
           {
@@ -22,6 +23,7 @@ describe("Votes utils", () => {
             artist: "bandB",
             rank: 2,
             type: "global",
+            wantWrite: false,
             write: false,
           },
         ],
@@ -34,19 +36,21 @@ describe("Votes utils", () => {
         artist: "bandA",
         rank: 1,
         type: "global",
+        wantWrite: false,
         write: false,
-        userId: 1,
+        userId: "1",
       },
       {
         album: "xyz",
         artist: "bandB",
         rank: 2,
         type: "global",
+        wantWrite: false,
         write: false,
-        userId: 1,
+        userId: "1",
       },
     ];
 
-    expect(convertChartsToVotes(inputCharts, 1)).toEqual(expectedVotes);
+    expect(convertChartsToVotes(inputCharts, "1")).toEqual(expectedVotes);
   });
 });

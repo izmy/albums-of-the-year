@@ -43,6 +43,7 @@ export const Voting: React.FC = () => {
               rank: oldVote.rank,
               artist: oldVote.artist,
               album: oldVote.album,
+              wantWrite: oldVote.wantWrite,
               write: oldVote.write,
               type: oldVote.type,
             });
@@ -95,6 +96,7 @@ export const Voting: React.FC = () => {
           size="large"
           onClick={handleSubmit}
           startIcon={<SaveIcon />}
+          style={{ marginTop: "50px" }}
         >
           {edit ? "Změnit hlasy" : "Hlasovat"}
         </Button>
