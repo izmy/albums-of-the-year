@@ -1,0 +1,27 @@
+{
+  "name": "albums-of-the-year",
+  "version": "1.0.0",
+  "description": "The voting app for the albums of the year for musicserver.cz",
+  "main": "index.js",
+  "repository": "https://github.com/izmy/albums-of-the-year",
+  "author": "Jaroslav Hrách <me@jaroslavhrach.cz>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "client",
+      "server"
+    ]
+  },
+  "scripts": {
+    "build": "yarn client build && yarn server build && yarn clear && yarn build:merge",
+    "build:merge": "cpr server/dist dist && cpr client/build dist/public",
+    "clear": "yarn rimraf dist",
+    "client": "yarn workspace albums-of-the-year-client",
+    "server": "yarn workspace albums-of-the-year-server"
+  },
+  "devDependencies": {
+    "cpr": "3.0.1",
+    "rimraf": "3.0.2"
+  }
+}
