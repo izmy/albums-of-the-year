@@ -4,7 +4,7 @@ import { UserList } from "../../models/user.types";
 import { Vote } from "../../models/votes.types";
 import SaveIcon from "@material-ui/icons/Save";
 import { RankBullet } from "../../components/RankBullet";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsTable";
+import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
 import CheckIcon from "@material-ui/icons/Check";
 
 interface ChangeItemProps {

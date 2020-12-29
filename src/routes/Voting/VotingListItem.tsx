@@ -8,7 +8,7 @@ import {
 import { Vote } from "../../models/votes.types";
 import { searchByType } from "../../services/api/spotifyApi";
 import { RankBullet } from "../../components/RankBullet";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsTable";
+import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
 
 interface VotingListItemProps {
   vote: Vote;

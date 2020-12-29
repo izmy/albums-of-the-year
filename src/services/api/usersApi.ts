@@ -1,33 +1,12 @@
 import axios from "axios";
-import { UserListItem } from "../../models/user.types";
+import { User, UserData, UserListItem } from "../../models/user.types";
 
-export const loginUser = async (email, password) => {
-  const user = await axios.post(
-    `${process.env.REACT_APP_BACKEND_API_URL}/v1/login`,
-    {
-      email,
-      password,
-    }
-  );
-
-  return user.data;
-};
-
-export const loginUserFacebook = async (userInfo) => {
-  const user = await axios.post(
-    `${process.env.REACT_APP_BACKEND_API_URL}/v1/login/facebook`,
-    {
-      accessToken: userInfo.accessToken,
-      userID: userInfo.userID,
-      email: userInfo.email,
-    }
-  );
-
-  return user.data;
-};
-
-export const registerUser = async (name, email, password) => {
-  const user = await axios.post(
+export const registerUser = async (
+  name: string,
+  email: string,
+  password: string
+) => {
+  const user = await axios.post<UserData>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/users`,
     {
       name,
@@ -41,7 +20,7 @@ export const registerUser = async (name, email, password) => {
 
 export const getUser = async () => {
   const token = localStorage.getItem("auth-token");
-  const user = await axios.get(
+  const user = await axios.get<User>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/users`,
     {
       headers: {
@@ -54,7 +33,7 @@ export const getUser = async () => {
 };
 
 export const authorize = async (token: string) => {
-  const tokenResponse = await axios.get(
+  const tokenResponse = await axios.get<boolean>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/users/authorize`,
     {
       headers: {

@@ -14,11 +14,12 @@ import { MainLayout } from "./components/MainLayout";
 import { Login } from "./routes/Login/Login";
 import { Voting } from "./routes/Voting/Voting";
 import { Change } from "./routes/Change/Change";
-import { Results } from "./routes/Results/Results";
+import { ResultsList } from "./routes/Results/ResultsList";
 import { useState } from "react";
 import { UserContext } from "./services/UserContext";
 import { authorize, getUser } from "./services/api/usersApi";
 import { LoadingSpinner } from "./components/LoadingSpinner";
+import { UserData } from "./models/user.types";
 
 const theme = createMuiTheme({
   palette: {
@@ -35,7 +36,7 @@ const PrivateRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) => {
-        return userData !== null ? (
+        return userData?.user !== undefined ? (
           children
         ) : (
           <Redirect
@@ -52,7 +53,7 @@ const PrivateRoute = ({ children, ...rest }) => {
 
 const App = () => {
   const [loading, setLoading] = React.useState(true);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData>({});
 
   React.useEffect(() => {
     const checkLoggedIn = async () => {
@@ -67,10 +68,7 @@ const App = () => {
         const loggedUser = await getUser();
         setUserData({
           token,
-          user: {
-            ...loggedUser,
-            id: loggedUser._id,
-          },
+          user: loggedUser,
         });
       }
       setLoading(false);
@@ -98,7 +96,7 @@ const App = () => {
                 </Route>
                 <PrivateRoute path="/results">
                   <MainLayout>
-                    <Results />
+                    <ResultsList />
                   </MainLayout>
                 </PrivateRoute>
                 <PrivateRoute path="/">

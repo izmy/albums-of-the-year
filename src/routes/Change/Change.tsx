@@ -14,7 +14,7 @@ import { Vote } from "../../models/votes.types";
 import { getAllUsers } from "../../services/api/usersApi";
 import { getAllVotes, updateVote } from "../../services/api/votesApi";
 import { ChangeItem } from "./ChangeItem";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsTable";
+import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
 
 const FilterTextField = styled(TextField)`
   width: 100%;

@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { UserContext } from "../services/UserContext";
+import { Role } from "../models/user.types";
 
 export const NavigationList = styled.ul`
   margin: 0;
@@ -60,8 +60,12 @@ export const StyledNavLink = styled(NavLink)`
   }
 `;
 
-export const Navigation = () => {
-  const { userData } = React.useContext(UserContext);
+interface NavigationProps {
+  role: Role[];
+}
+
+export const Navigation: React.FC<NavigationProps> = ({ role }) => {
+  const isAdmin = (role: Role[]) => role.includes(Role.ADMIN);
 
   return (
     <NavigationList>
@@ -70,7 +74,7 @@ export const Navigation = () => {
           Hlasovat
         </StyledNavLink>
       </Item>
-      {userData?.user?.role?.includes("ADMIN") ? (
+      {isAdmin(role) ? (
         <Item>
           <StyledNavLink exact to="/change" activeClassName="active">
             Upravit hlasování

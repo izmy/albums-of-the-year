@@ -35,7 +35,8 @@ export const Voting: React.FC = () => {
   React.useEffect(() => {
     if (userData?.user?._id && loading) {
       const fetchData = async () => {
-        const oldVotes = await getUserVotes(userData?.user?._id);
+        if (userData?.user === undefined) return;
+        const oldVotes = await getUserVotes(userData.user._id);
 
         if (oldVotes.data.length > 0) {
           for (const oldVote of oldVotes.data) {
@@ -57,22 +58,21 @@ export const Voting: React.FC = () => {
     }
   }, [userData, loading, handleSetChart]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const votes = convertChartsToVotes(charts, userData!.user!._id);
 
-    saveVotes(votes)
-      .then((result) => {
-        if (result.status === 200) {
-          setVoteStatus("success");
-        } else {
-          setVoteStatus("error");
-        }
-        setShowSnackbar(true);
-      })
-      .catch(() => {
+    try {
+      const saveVotesResult = await saveVotes(votes);
+      if (saveVotesResult.status === 200) {
+        setVoteStatus("success");
+      } else {
         setVoteStatus("error");
-        setShowSnackbar(true);
-      });
+      }
+      setShowSnackbar(true);
+    } catch (err) {
+      setVoteStatus("error");
+      setShowSnackbar(true);
+    }
   };
 
   const handleCloseSnackbar = () => setShowSnackbar(false);

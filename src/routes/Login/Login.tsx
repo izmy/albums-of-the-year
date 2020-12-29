@@ -4,12 +4,10 @@ import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Logo } from "../../components/Logo";
-import {
-  loginUser,
-  loginUserFacebook,
-  registerUser,
-} from "../../services/api/usersApi";
+import { loginUser, loginUserFacebook } from "../../services/api/loginApi";
+import { registerUser } from "../../services/api/usersApi";
 import { UserContext } from "../../services/UserContext";
+import { validateEmail } from "../../utils/email.utils";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 
@@ -101,7 +99,7 @@ export const StyledTextField = styled(TextField)`
 `;
 
 export const Login: React.FC = () => {
-  const { setUserData } = React.useContext(UserContext);
+  const { userData, setUserData } = React.useContext(UserContext);
   const { state } = useLocation<{ from: string }>();
   const history = useHistory();
   const [loading, setLoading] = React.useState(false);
@@ -111,13 +109,20 @@ export const Login: React.FC = () => {
   const handleFacebookLogin = async (userInfo: ReactFacebookLoginInfo) => {
     if (userInfo.email) {
       setLoading(true);
-      const loggedUser = await loginUserFacebook(userInfo);
-      localStorage.setItem("auth-token", loggedUser.token);
-      setUserData({
-        token: loggedUser.token,
-        user: { ...loggedUser.user, id: loggedUser.user.id },
-      });
-      history.push(state?.from || "/");
+      try {
+        const loggedUser = await loginUserFacebook(userInfo);
+
+        if (loggedUser.token === undefined || loggedUser.user === undefined)
+          throw new Error("missing token and user data");
+
+        localStorage.setItem("auth-token", loggedUser.token);
+        setUserData({
+          token: loggedUser.token,
+          user: loggedUser.user,
+        });
+      } catch (err) {
+        setError(err.message);
+      }
     }
     setLoading(false);
   };
@@ -128,12 +133,14 @@ export const Login: React.FC = () => {
       setLoading(true);
       try {
         const loggedUser = await loginUser(email, password);
+        if (loggedUser.token === undefined || loggedUser.user === undefined)
+          throw new Error("missing token and user data");
+
         localStorage.setItem("auth-token", loggedUser.token);
         setUserData({
           token: loggedUser.token,
-          user: { ...loggedUser.user, id: loggedUser.user.id },
+          user: loggedUser.user,
         });
-        history.push(state?.from || "/");
       } catch (err) {
         setError(err.response.data.msg);
       }
@@ -149,16 +156,24 @@ export const Login: React.FC = () => {
     password: string
   ) => {
     if (name !== "" && email !== "" && password !== "") {
+      if (!validateEmail(email)) {
+        setError("E-mail není ve správném formátu.");
+        return;
+      }
+
       setError("");
       setLoading(true);
+
       try {
         const loggedUser = await registerUser(name, email, password);
+        if (loggedUser.token === undefined || loggedUser.user === undefined)
+          throw new Error("missing token and user data");
+
         localStorage.setItem("auth-token", loggedUser.token);
         setUserData({
           token: loggedUser.token,
-          user: { ...loggedUser.user, id: loggedUser.user.id },
+          user: loggedUser.user,
         });
-        history.push(state?.from || "/");
       } catch (err) {
         setError(err.response.data.msg);
       }
@@ -167,6 +182,12 @@ export const Login: React.FC = () => {
     }
     setLoading(false);
   };
+
+  React.useEffect(() => {
+    if (userData?.token !== undefined && userData?.user !== undefined) {
+      history.push(state?.from || "/");
+    }
+  }, [userData, history, state]);
 
   return (
     <LoginContainer>

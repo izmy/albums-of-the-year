@@ -1,8 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import * as React from "react";
+import { render } from "@testing-library/react";
 import App from "./App";
 
-test("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("renders loading circle", () => {
+  const { container } = render(<App />);
+  const loading = container.querySelector(".MuiCircularProgress-svg");
+  expect(loading).toBeInTheDocument();
 });

@@ -8,7 +8,7 @@ import {
   TableContainer,
   TableHead,
 } from "@material-ui/core";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsTable";
+import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
 
 interface VotingListProps {
   heading: string;

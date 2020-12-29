@@ -10,12 +10,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleLogin = () => {
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onLogin(email, password);
   };
 
   return (
-    <>
+    <form onSubmit={handleLogin}>
       <LoginTitle>Přihlášení</LoginTitle>
       <LoginItem>
         <StyledTextField
@@ -36,14 +37,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       </LoginItem>
       <LoginItem>
         <LoginButton
+          type="submit"
           variant="contained"
           color="primary"
           startIcon={<InputIcon />}
-          onClick={handleLogin}
         >
           Přihlásit se
         </LoginButton>
       </LoginItem>
-    </>
+    </form>
   );
 };

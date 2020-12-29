@@ -9,6 +9,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import styled from "styled-components";
+import { Result } from "../../models/results.types";
 
 export const StyledTableCell = styled(TableCell)`
   &.MuiTableCell-head {
@@ -24,7 +25,13 @@ export const StyledTableRow = styled(TableRow)`
   }
 `;
 
-export const ResultsTable = ({ rows }) => {
+interface ResultsListTableProps {
+  results: Result[];
+}
+
+export const ResultsListTable: React.FC<ResultsListTableProps> = ({
+  results,
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="Tabulka výsledků">
@@ -39,15 +46,17 @@ export const ResultsTable = ({ rows }) => {
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, index) => (
-            <StyledTableRow key={index}>
+          {results.map((result, index) => (
+            <StyledTableRow key={`${result.type}-${index}`}>
               <StyledTableCell scope="row">{index + 1}.</StyledTableCell>
-              <StyledTableCell scope="row">{row.artist}</StyledTableCell>
-              <StyledTableCell scope="row">{row.album}</StyledTableCell>
-              <StyledTableCell scope="row">{row.ranks.length}</StyledTableCell>
-              <StyledTableCell scope="row">{row.points}</StyledTableCell>
+              <StyledTableCell scope="row">{result.artist}</StyledTableCell>
+              <StyledTableCell scope="row">{result.album}</StyledTableCell>
               <StyledTableCell scope="row">
-                {row.writeByUser ? row.writeByUser : "-"}
+                {result.ranks.length}
+              </StyledTableCell>
+              <StyledTableCell scope="row">{result.points}</StyledTableCell>
+              <StyledTableCell scope="row">
+                {result.writeByUser !== undefined ? result.writeByUser : "-"}
               </StyledTableCell>
             </StyledTableRow>
           ))}

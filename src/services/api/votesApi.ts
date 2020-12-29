@@ -4,7 +4,7 @@ import { Vote } from "../../models/votes.types";
 export const getUserVotes = (userId: string) => {
   const token = localStorage.getItem("auth-token");
 
-  return axios.get(
+  return axios.get<Vote[]>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/votes/${userId}`,
     {
       headers: {
@@ -18,7 +18,7 @@ export const getUserVotes = (userId: string) => {
 export const saveVotes = (votes: Vote[]) => {
   const token = localStorage.getItem("auth-token");
 
-  return axios.post(
+  return axios.post<string>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/votes`,
     votes,
     {
@@ -34,7 +34,7 @@ export const saveVotes = (votes: Vote[]) => {
 export const updateVote = (voteId: string, vote: Vote) => {
   const token = localStorage.getItem("auth-token");
 
-  return axios.patch(
+  return axios.patch<string>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/votes/update/${voteId}`,
     {
       vote,

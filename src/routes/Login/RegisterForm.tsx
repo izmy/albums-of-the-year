@@ -11,12 +11,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleRegister = () => {
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     onRegister(name, email, password);
   };
 
   return (
-    <>
+    <form onSubmit={handleLogin}>
       <LoginTitle>Registrace</LoginTitle>
       <LoginItem>
         <StyledTextField
@@ -45,14 +46,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onRegister }) => {
       </LoginItem>
       <LoginItem>
         <LoginButton
+          type="submit"
           variant="contained"
           color="primary"
           startIcon={<InputIcon />}
-          onClick={handleRegister}
         >
           Registrovat se
         </LoginButton>
       </LoginItem>
-    </>
+    </form>
   );
 };
