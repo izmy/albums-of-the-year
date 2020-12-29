@@ -29,16 +29,7 @@ export const loginFacebookController = async (
         { _id: user._id },
         process.env.JWT_SECRET_KEY ?? ""
       );
-      res.json({
-        token,
-        user: {
-          _id: user._id,
-          name,
-          email,
-          role: user.role,
-          picture: picture.data.url,
-        },
-      });
+      res.json({ token, user });
     } else {
       const newUser = new User({ name, email, picture: picture.data.url });
       newUser.save((err, data) => {
@@ -49,7 +40,7 @@ export const loginFacebookController = async (
           { _id: data._id },
           process.env.JWT_SECRET_KEY ?? ""
         );
-        res.json({ token, user: { _id: newUser._id, name, email, picture } });
+        res.json({ token, user: newUser });
       });
     }
   } catch (err) {
