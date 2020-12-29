@@ -89,6 +89,11 @@ export const getResults = async (
       },
     },
     {
+      $project: {
+        _id: 0,
+      },
+    },
+    {
       $group: {
         _id: "$type",
         type: {

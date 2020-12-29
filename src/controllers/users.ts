@@ -75,7 +75,8 @@ export const createUser = async (
     } else {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-      const newUser = new User({ name, email, password: hashedPassword });
+      const role = [] as Role[];
+      const newUser = new User({ name, email, password: hashedPassword, role });
       newUser.save((err, data) => {
         if (err) {
           return res.status(400).json({ error: "Something went wrong..." });
@@ -84,7 +85,10 @@ export const createUser = async (
           { _id: data._id },
           process.env.JWT_SECRET_KEY ?? ""
         );
-        return res.json({ token, user: { _id: newUser._id, name, email } });
+        return res.json({
+          token,
+          user: { _id: newUser._id, name, email, role },
+        });
       });
     }
   } catch (err) {
