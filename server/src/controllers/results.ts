@@ -1,5 +1,5 @@
 import * as express from "express";
-import Vote from "../models/vote";
+import Vote from "../models/vote.types";
 
 export const getResults = async (
   req: express.Request,
@@ -40,6 +40,7 @@ export const getResults = async (
         _id: {
           artist: "$artist",
           album: "$album",
+          type: "$type",
         },
         artist: {
           $first: "$artist",

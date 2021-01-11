@@ -20,6 +20,10 @@ import { UserContext } from "./services/UserContext";
 import { authorize, getUser } from "./services/api/usersApi";
 import { LoadingSpinner } from "./components/LoadingSpinner";
 import { UserData } from "./models/user.types";
+import { NotFound } from "./routes/NotFound/NotFound";
+import { Nominate } from "./routes/Nominate/Nominate";
+import { NominatedAlbumsList } from "./routes/NominatedAlbums/NominatedAlbums";
+import { Settings } from "./routes/Settings/Settings";
 
 const theme = createMuiTheme({
   palette: {
@@ -86,22 +90,43 @@ const App = () => {
           ) : (
             <Router>
               <Switch>
-                <Route path="/login">
-                  <Login />
-                </Route>
-                <Route path="/change">
+                <PrivateRoute path="/nominate">
                   <MainLayout>
-                    <Change />
+                    <Nominate />
                   </MainLayout>
-                </Route>
+                </PrivateRoute>
+                <PrivateRoute path="/nominated-albums">
+                  <MainLayout>
+                    <NominatedAlbumsList />
+                  </MainLayout>
+                </PrivateRoute>
+                <PrivateRoute path="/voting">
+                  <MainLayout>
+                    <Voting />
+                  </MainLayout>
+                </PrivateRoute>
                 <PrivateRoute path="/results">
                   <MainLayout>
                     <ResultsList />
                   </MainLayout>
                 </PrivateRoute>
+                <PrivateRoute path="/change">
+                  <MainLayout>
+                    <Change />
+                  </MainLayout>
+                </PrivateRoute>
+                <PrivateRoute path="/settings">
+                  <MainLayout>
+                    <Settings />
+                  </MainLayout>
+                </PrivateRoute>
+                <Route path="/login">
+                  <Login />
+                </Route>
+                <Redirect exact from="/" to="/nominate" />
                 <PrivateRoute path="/">
                   <MainLayout>
-                    <Voting />
+                    <NotFound />
                   </MainLayout>
                 </PrivateRoute>
               </Switch>

@@ -4,8 +4,7 @@ import { UserList } from "../../models/user.types";
 import { Vote } from "../../models/votes.types";
 import SaveIcon from "@material-ui/icons/Save";
 import { RankBullet } from "../../components/RankBullet";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
-import CheckIcon from "@material-ui/icons/Check";
+import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 
 interface ChangeItemProps {
   users: UserList;
@@ -53,11 +52,6 @@ export const ChangeItem: React.FC<ChangeItemProps> = React.memo(
         </StyledTableCell>
         <StyledTableCell>
           {vote.userId && users[vote.userId]?.name}
-        </StyledTableCell>
-        <StyledTableCell align="center">
-          {vote.wantWrite ? (
-            <CheckIcon fontSize="large" color="secondary" />
-          ) : null}
         </StyledTableCell>
         <StyledTableCell>
           <Checkbox

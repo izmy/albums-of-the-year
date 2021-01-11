@@ -2,7 +2,7 @@ import * as express from "express";
 import bcrypt from "bcrypt";
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import User from "../models/user";
+import User from "../models/user.types";
 
 export const loginFacebookController = async (
   req: express.Request,

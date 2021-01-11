@@ -1,17 +1,19 @@
 import * as express from "express";
 import mongoose from "mongoose";
-import Vote from "../models/vote";
+import { RequestWithVerifiedUserData } from "../middleware/auth";
+import Vote from "../models/vote.types";
 
 export const saveVotesController = async (
-  req: express.Request,
+  req: RequestWithVerifiedUserData,
   res: express.Response
 ) => {
   try {
-    const userId = req.body.userId;
-    const userVotes = await Vote.find({ userId });
+    const userId = req.verifiedUser?._id;
+    const types = (req.query?.types as string)?.split(",") ?? [];
+    const userVotes = await Vote.find({ userId, type: { $in: types } });
 
     try {
-      await Vote.deleteMany({ userId });
+      await Vote.deleteMany({ userId, type: { $in: types } });
       await Vote.insertMany(req.body);
       return res.sendStatus(200);
     } catch (err) {
@@ -33,7 +35,8 @@ export const getUserVotesController = async (
 ) => {
   try {
     const userId = mongoose.Types.ObjectId(req.params.userId);
-    const votes = await Vote.find({ userId });
+    const types = (req.query?.types as string)?.split(",") ?? [];
+    const votes = await Vote.find({ userId, type: { $in: types } });
     return res.json(votes);
   } catch (err) {
     return res.status(400).json({ error: "Something went wrong..." });

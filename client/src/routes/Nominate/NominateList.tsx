@@ -1,5 +1,5 @@
 import * as React from "react";
-import { VotingListItem } from "./VotingListItem";
+import { VotingListItem } from "./NominateListItem";
 import { Vote } from "../../models/votes.types";
 import {
   Paper,
@@ -8,7 +8,7 @@ import {
   TableContainer,
   TableHead,
 } from "@material-ui/core";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
+import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 
 interface VotingListProps {
   heading: string;
@@ -26,7 +26,7 @@ export const VotingList: React.FC<VotingListProps> = ({
       <h2>{heading}</h2>
       <TableContainer
         component={Paper}
-        style={{ maxWidth: "800px", margin: "auto" }}
+        style={{ maxWidth: "700px", margin: "auto" }}
       >
         <Table aria-label="Hlasovací tabulka">
           <TableHead>
@@ -34,7 +34,6 @@ export const VotingList: React.FC<VotingListProps> = ({
               <StyledTableCell>#</StyledTableCell>
               <StyledTableCell>Interpret</StyledTableCell>
               <StyledTableCell>Album</StyledTableCell>
-              <StyledTableCell align="center">Chci psát</StyledTableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>

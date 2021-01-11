@@ -14,7 +14,7 @@ import { Vote } from "../../models/votes.types";
 import { getAllUsers } from "../../services/api/usersApi";
 import { getAllVotes, updateVote } from "../../services/api/votesApi";
 import { ChangeItem } from "./ChangeItem";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
+import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 
 const FilterTextField = styled(TextField)`
   width: 100%;
@@ -110,7 +110,6 @@ export const Change: React.FC = () => {
               <StyledTableCell>Interpret</StyledTableCell>
               <StyledTableCell>Album</StyledTableCell>
               <StyledTableCell>Hlasující</StyledTableCell>
-              <StyledTableCell align="center">Chce psát</StyledTableCell>
               <StyledTableCell align="center">Píše</StyledTableCell>
               <StyledTableCell>Akce</StyledTableCell>
             </StyledTableRow>

@@ -19,8 +19,7 @@ export type UserData = {
   token?: string;
 };
 
-export type UserListItem = Pick<User, "_id" | "name" | "email">;
-export type UserList = { [key: string]: UserListItem };
+export type UserList = { [key: string]: User };
 
 export type UserContextType = {
   userData: UserData | null;

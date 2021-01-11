@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Vote } from "../../models/votes.types";
 
-export const getUserVotes = (userId: string) => {
+export const getUserVotes = (userId: string, types: string[]) => {
   const token = localStorage.getItem("auth-token");
 
   return axios.get<Vote[]>(
@@ -11,11 +11,12 @@ export const getUserVotes = (userId: string) => {
         "Content-Type": "application/json",
         "x-auth-token": token,
       },
+      params: { types: types.join() },
     }
   );
 };
 
-export const saveVotes = (votes: Vote[]) => {
+export const saveVotes = (votes: Vote[], types: string[]) => {
   const token = localStorage.getItem("auth-token");
 
   return axios.post<string>(
@@ -27,6 +28,7 @@ export const saveVotes = (votes: Vote[]) => {
         Accept: "application/json",
         "x-auth-token": token,
       },
+      params: { types: types.join() },
     }
   );
 };

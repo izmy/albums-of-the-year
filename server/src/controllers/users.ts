@@ -1,7 +1,8 @@
 import * as express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User, { Role } from "../models/user";
+import User, { Role } from "../models/user.types";
+import { RequestWithVerifiedUserData } from "../middleware/auth";
 
 export const authorizeController = async (
   req: express.Request,
@@ -23,9 +24,12 @@ export const authorizeController = async (
   }
 };
 
-export const getUser = async (req: express.Request, res: express.Response) => {
+export const getUser = async (
+  req: RequestWithVerifiedUserData,
+  res: express.Response
+) => {
   try {
-    const user = await User.findById({ _id: req.body.userId });
+    const user = await User.findById({ _id: req.verifiedUser?._id });
 
     return res.json(user);
   } catch (err) {
@@ -34,11 +38,11 @@ export const getUser = async (req: express.Request, res: express.Response) => {
 };
 
 export const getAllUsers = async (
-  req: express.Request,
+  req: RequestWithVerifiedUserData,
   res: express.Response
 ) => {
   try {
-    const user = await User.findById({ _id: req.body.userId });
+    const user = await User.findById({ _id: req.verifiedUser?._id });
 
     if (user?.role.includes(Role.ADMIN)) {
       const users = await User.aggregate([
@@ -46,6 +50,8 @@ export const getAllUsers = async (
           $project: {
             name: 1,
             email: 1,
+            picture: 1,
+            role: 1,
           },
         },
       ]);
@@ -93,5 +99,34 @@ export const createUser = async (
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const patchUser = async (
+  req: RequestWithVerifiedUserData,
+  res: express.Response
+) => {
+  const user = await User.findById({ _id: req.verifiedUser?._id });
+
+  if (!user?.role.includes(Role.ADMIN)) {
+    return res
+      .status(401)
+      .json({ msg: "Endpoint is only available to the admin." });
+  }
+
+  if (!req.body.hasOwnProperty("role") && !req.body.hasOwnProperty("name")) {
+    return res.status(401).json({
+      msg: `It is possible to change the properties "name" and "role".`,
+    });
+  }
+
+  try {
+    const user = await User.findOne({ _id: req.params.userId });
+    const newUser = { ...user.toObject(), ...req.body };
+    await User.updateOne({ _id: req.params.userId }, newUser);
+
+    return res.sendStatus(200);
+  } catch (err) {
+    return res.status(400).json({ error: "Something went wrong..." });
   }
 };

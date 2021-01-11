@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User, UserData, UserListItem } from "../../models/user.types";
+import { Role, User, UserData } from "../../models/user.types";
 
 export const registerUser = async (
   name: string,
@@ -48,8 +48,24 @@ export const authorize = async (token: string) => {
 export const getAllUsers = async () => {
   const token = localStorage.getItem("auth-token");
 
-  return axios.get<UserListItem[]>(
+  return axios.get<User[]>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/users/all`,
+    {
+      headers: {
+        "x-auth-token": token,
+      },
+    }
+  );
+};
+
+export const updateUserRole = async (userId: string, newRole: Role[]) => {
+  const token = localStorage.getItem("auth-token");
+
+  return axios.patch<User[]>(
+    `${process.env.REACT_APP_BACKEND_API_URL}/v1/users/${userId}`,
+    {
+      role: newRole,
+    },
     {
       headers: {
         "x-auth-token": token,

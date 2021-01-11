@@ -7,7 +7,6 @@ export const createAlbumsArray = (size: number, type: ChartType): Vote[] =>
       rank: 0,
       artist: "",
       album: "",
-      wantWrite: false,
       write: false,
     })
     .map((vote, index) => ({ ...vote, type, rank: index + 1 }));

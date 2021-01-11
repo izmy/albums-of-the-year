@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import SettingsIcon from "@material-ui/icons/Settings";
+import { NavLink } from "react-router-dom";
+import { isAdmin } from "../utils/users.utils";
+import { Role } from "../models/user.types";
 
 const UserMenuContainer = styled.div`
   position: absolute;
@@ -42,11 +46,18 @@ const IconPhoto = styled.img`
   max-height: 35px;
 `;
 
-const Logout = styled.a`
+const NavItem = styled.a`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-top: 15px;
+  color: white;
+  text-decoration: none;
   cursor: pointer;
+
+  &:first-child {
+    margin-top: 0;
+  }
 
   @media (max-width: 990px) {
     justify-content: center;
@@ -62,15 +73,19 @@ const Logout = styled.a`
   }
 `;
 
+const NavItemSettings = NavItem.withComponent(NavLink);
+
 interface UserMenuProps {
   name: string;
   picture?: string;
+  role: Role[];
   onLogout: () => void;
 }
 
 export const UserMenu: React.FC<UserMenuProps> = ({
   name,
   picture,
+  role,
   onLogout,
 }) => (
   <UserMenuContainer>
@@ -78,9 +93,17 @@ export const UserMenu: React.FC<UserMenuProps> = ({
       <IconPhoto src={picture ?? "images/user.jpg"} alt={name} />
       <UserMenuName>{name}</UserMenuName>
     </UserMenuBox>
-    <Logout onClick={onLogout}>
-      <ExitToAppIcon fontSize={"small"} />
-      <span>Odhlásit se</span>
-    </Logout>
+    <nav>
+      {isAdmin(role) ? (
+        <NavItemSettings exact to="/settings">
+          <SettingsIcon fontSize={"small"} />
+          <span>Nastavení</span>
+        </NavItemSettings>
+      ) : null}
+      <NavItem onClick={onLogout}>
+        <ExitToAppIcon fontSize={"small"} />
+        <span>Odhlásit se</span>
+      </NavItem>
+    </nav>
   </UserMenuContainer>
 );

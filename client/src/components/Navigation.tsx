@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Role } from "../models/user.types";
+import { isAdmin } from "../utils/users.utils";
 
 export const NavigationList = styled.ul`
   margin: 0;
@@ -51,11 +52,11 @@ export const StyledNavLink = styled(NavLink)`
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     margin: 1rem 0;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 650px) {
     margin: 0.2rem 1rem;
   }
 `;
@@ -65,27 +66,37 @@ interface NavigationProps {
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ role }) => {
-  const isAdmin = (role: Role[]) => role.includes(Role.ADMIN);
-
   return (
-    <NavigationList>
-      <Item>
-        <StyledNavLink exact to="/" activeClassName="active">
-          Hlasovat
-        </StyledNavLink>
-      </Item>
-      {isAdmin(role) ? (
+    <nav>
+      <NavigationList>
         <Item>
-          <StyledNavLink exact to="/change" activeClassName="active">
-            Upravit hlasování
+          <StyledNavLink exact to="/nominate" activeClassName="active">
+            Nominovat
           </StyledNavLink>
         </Item>
-      ) : null}
-      <Item>
-        <StyledNavLink exact to="/results" activeClassName="active">
-          Zobrazit výsledky
-        </StyledNavLink>
-      </Item>
-    </NavigationList>
+        <Item>
+          <StyledNavLink exact to="/nominated-albums" activeClassName="active">
+            Nominovaná alba
+          </StyledNavLink>
+        </Item>
+        <Item>
+          <StyledNavLink exact to="/voting" activeClassName="active">
+            Hlasovat
+          </StyledNavLink>
+        </Item>
+        <Item>
+          <StyledNavLink exact to="/results" activeClassName="active">
+            Výsledky
+          </StyledNavLink>
+        </Item>
+        {isAdmin(role) ? (
+          <Item>
+            <StyledNavLink exact to="/change" activeClassName="active">
+              Upravit hlasování
+            </StyledNavLink>
+          </Item>
+        ) : null}
+      </NavigationList>
+    </nav>
   );
 };

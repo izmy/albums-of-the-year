@@ -5,16 +5,16 @@ import { Vote } from "../../models/votes.types";
 import { addItemsToCharts, updateChart } from "../../utils/charts.utils";
 import { convertChartsToVotes } from "../../utils/votes.utils";
 import { getUserVotes, saveVotes } from "../../services/api/votesApi";
-import { VotingList } from "../Nominate/NominateList";
+import { VotingList } from "./NominateList";
 import SaveIcon from "@material-ui/icons/Save";
 import { UserContext } from "../../services/UserContext";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { chartsParameters } from "../../config/config";
+import { nominationChartsParameters } from "../../config/config";
 
-export const Voting: React.FC = () => {
+export const Nominate: React.FC = () => {
   const { userData } = React.useContext(UserContext);
   const [charts, setCharts] = React.useState(
-    chartsParameters.map(addItemsToCharts)
+    nominationChartsParameters.map(addItemsToCharts)
   );
   const [loading, setLoading] = React.useState(true);
   const [edit, setEdit] = React.useState(false);
@@ -32,8 +32,8 @@ export const Voting: React.FC = () => {
       const fetchData = async () => {
         if (userData?.user === undefined) return;
         const oldVotes = await getUserVotes(userData.user._id, [
-          "global-2020",
-          "czech-2020",
+          "nomination-global-2020",
+          "nomination-czech-2020",
         ]);
 
         if (oldVotes.data.length > 0) {
@@ -60,8 +60,8 @@ export const Voting: React.FC = () => {
 
     try {
       const saveVotesResult = await saveVotes(votes, [
-        "global-2020",
-        "czech-2020",
+        "nomination-global-2020",
+        "nomination-czech-2020",
       ]);
       if (saveVotesResult.status === 200) {
         setVoteStatus("success");
@@ -79,7 +79,7 @@ export const Voting: React.FC = () => {
 
   return (
     <div>
-      <h1>Hlasovat</h1>
+      <h1>Nominovat</h1>
       {loading ? <LoadingSpinner /> : null}
       <div style={{ display: loading ? "none" : "block" }}>
         {charts.map((chart) => (
@@ -98,7 +98,7 @@ export const Voting: React.FC = () => {
           startIcon={<SaveIcon />}
           style={{ marginTop: "50px" }}
         >
-          {edit ? "Změnit hlasy" : "Hlasovat"}
+          {edit ? "Změnit nominaci" : "Nominovat alba"}
         </Button>
       </div>
       <Snackbar
@@ -111,9 +111,9 @@ export const Voting: React.FC = () => {
         onClose={handleCloseSnackbar}
       >
         {voteStatus === "success" ? (
-          <Alert severity="success">Hlasování proběhlo úspěšně.</Alert>
+          <Alert severity="success">Nominace proběhla úspěšně.</Alert>
         ) : (
-          <Alert severity="error">Při hlasování došlo k chybě.</Alert>
+          <Alert severity="error">Při nominaci došlo k chybě.</Alert>
         )}
       </Snackbar>
     </div>

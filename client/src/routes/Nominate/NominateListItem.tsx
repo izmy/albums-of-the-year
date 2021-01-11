@@ -1,4 +1,4 @@
-import { Checkbox, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import * as React from "react";
 import {
@@ -8,7 +8,7 @@ import {
 import { Vote } from "../../models/votes.types";
 import { searchByType } from "../../services/api/spotifyApi";
 import { RankBullet } from "../../components/RankBullet";
-import { StyledTableCell, StyledTableRow } from "../Results/ResultsListTable";
+import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 
 interface VotingListItemProps {
   vote: Vote;
@@ -20,7 +20,7 @@ export const VotingListItem: React.FC<VotingListItemProps> = React.memo(
     const [artists, setArtists] = React.useState<SpotifyArtist[]>([]);
     const [albums, setAlbums] = React.useState<SpotifyAlbumSimplified[]>([]);
 
-    const handleSearchArtist = (
+    const handleSearchArtist = async (
       event: React.ChangeEvent<{}>,
       newValue: string | null
     ) => {
@@ -52,11 +52,6 @@ export const VotingListItem: React.FC<VotingListItemProps> = React.memo(
         setAlbums([]);
       }
 
-      onSetVote(newVote);
-    };
-
-    const handleWantWrite = () => {
-      const newVote = { ...vote, wantWrite: !vote.wantWrite };
       onSetVote(newVote);
     };
 
@@ -127,14 +122,6 @@ export const VotingListItem: React.FC<VotingListItemProps> = React.memo(
 
               return filtered;
             }}
-          />
-        </StyledTableCell>
-        <StyledTableCell align="center">
-          <Checkbox
-            checked={vote.wantWrite}
-            onChange={handleWantWrite}
-            onKeyPress={handleWantWrite}
-            name="wantWrite"
           />
         </StyledTableCell>
       </StyledTableRow>

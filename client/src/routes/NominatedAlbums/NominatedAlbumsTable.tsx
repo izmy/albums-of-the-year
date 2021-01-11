@@ -6,41 +6,33 @@ import {
   TableHead,
   Paper,
 } from "@material-ui/core";
-import { Result } from "../../models/results.types";
 import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
+import { NominatedAlbum } from "../../models/nominatedAlbums.types";
 
-interface ResultsListTableProps {
-  results: Result[];
+interface NominatedAlbumsTableProps {
+  results: NominatedAlbum[];
 }
 
-export const ResultsListTable: React.FC<ResultsListTableProps> = ({
+export const NominatedAlbumsListTable: React.FC<NominatedAlbumsTableProps> = ({
   results,
 }) => {
   return (
     <TableContainer component={Paper}>
-      <Table aria-label="Tabulka výsledků">
+      <Table aria-label="Tabulka nominovaných alb">
         <TableHead>
           <StyledTableRow>
-            <StyledTableCell>#</StyledTableCell>
             <StyledTableCell>Interpret</StyledTableCell>
             <StyledTableCell>Album</StyledTableCell>
-            <StyledTableCell>Hlasy</StyledTableCell>
-            <StyledTableCell>Body</StyledTableCell>
-            <StyledTableCell>Píše</StyledTableCell>
+            <StyledTableCell>Počet nominací</StyledTableCell>
           </StyledTableRow>
         </TableHead>
         <TableBody>
           {results.map((result, index) => (
-            <StyledTableRow key={`${result.type}-${index}`}>
-              <StyledTableCell scope="row">{index + 1}.</StyledTableCell>
+            <StyledTableRow key={`${result.artist}-${result.album}-${index}`}>
               <StyledTableCell scope="row">{result.artist}</StyledTableCell>
               <StyledTableCell scope="row">{result.album}</StyledTableCell>
               <StyledTableCell scope="row">
-                {result.ranks.length}
-              </StyledTableCell>
-              <StyledTableCell scope="row">{result.points}</StyledTableCell>
-              <StyledTableCell scope="row">
-                {result.writeByUser !== undefined ? result.writeByUser : "-"}
+                {result.countOfVoters}
               </StyledTableCell>
             </StyledTableRow>
           ))}

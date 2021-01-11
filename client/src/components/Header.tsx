@@ -36,6 +36,7 @@ export const Header = () => {
         <UserMenu
           name={userData.user.name}
           picture={userData.user.picture}
+          role={userData.user?.role ?? []}
           onLogout={handleLogout}
         />
       ) : null}
