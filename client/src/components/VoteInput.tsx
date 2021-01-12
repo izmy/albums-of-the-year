@@ -1,21 +1,18 @@
 import { TextField } from "@material-ui/core";
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import * as React from "react";
-import {
-  SpotifyAlbumSimplified,
-  SpotifyArtist,
-} from "../../models/spotify.types";
-import { Vote } from "../../models/votes.types";
-import { searchByType } from "../../services/api/spotifyApi";
-import { RankBullet } from "../../components/RankBullet";
-import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
+import { SpotifyAlbumSimplified, SpotifyArtist } from "../models/spotify.types";
+import { Vote } from "../models/votes.types";
+import { searchByType } from "../services/api/spotifyApi";
+import { RankBullet } from "./RankBullet";
+import { StyledTableCell, StyledTableRow } from "./StyledTable";
 
-interface VotingListItemProps {
+interface VoteInputProps {
   vote: Vote;
   onSetVote: (vote: Vote) => void;
 }
 
-export const VotingListItem: React.FC<VotingListItemProps> = React.memo(
+export const VoteInput: React.FC<VoteInputProps> = React.memo(
   ({ vote, onSetVote }) => {
     const [artists, setArtists] = React.useState<SpotifyArtist[]>([]);
     const [albums, setAlbums] = React.useState<SpotifyAlbumSimplified[]>([]);

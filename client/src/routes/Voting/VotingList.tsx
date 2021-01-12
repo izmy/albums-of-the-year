@@ -1,5 +1,4 @@
 import * as React from "react";
-import { VoteInput } from "../../components/VoteInput";
 import { Vote } from "../../models/votes.types";
 import {
   Paper,
@@ -9,17 +8,21 @@ import {
   TableHead,
 } from "@material-ui/core";
 import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
+import { VoteSelect } from "../../components/VoteSelect";
+import { NominatedAlbum } from "../../models/nominatedAlbums.types";
 
-interface NominateListProps {
+interface VotingListProps {
   heading: string;
   items: Vote[];
-  onSetNominateList: (vote: Vote) => void;
+  nominatedAlbums: NominatedAlbum[];
+  onSetVotingList: (vote: Vote) => void;
 }
 
-export const NominateList: React.FC<NominateListProps> = ({
+export const VotingList: React.FC<VotingListProps> = ({
   heading,
   items,
-  onSetNominateList,
+  nominatedAlbums,
+  onSetVotingList,
 }) => {
   return (
     <div>
@@ -32,16 +35,16 @@ export const NominateList: React.FC<NominateListProps> = ({
           <TableHead>
             <StyledTableRow>
               <StyledTableCell>#</StyledTableCell>
-              <StyledTableCell>Interpret</StyledTableCell>
-              <StyledTableCell>Album</StyledTableCell>
+              <StyledTableCell>Interpret - Album</StyledTableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
             {items.map((vote) => (
-              <VoteInput
+              <VoteSelect
                 key={`${vote.type}-${vote.rank}`}
                 vote={vote}
-                onSetVote={onSetNominateList}
+                nominatedAlbums={nominatedAlbums}
+                onSetVote={onSetVotingList}
               />
             ))}
           </TableBody>

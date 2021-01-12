@@ -48,7 +48,7 @@ export const getAllVotes = async (
   res: express.Response
 ) => {
   try {
-    const votes = await Vote.find();
+    const votes = await Vote.find().sort({ type: 1, artist: 1, album: 1 });
     return res.json(votes);
   } catch (err) {
     return res.status(400).json({ error: "Something went wrong..." });

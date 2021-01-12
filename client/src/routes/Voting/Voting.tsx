@@ -5,17 +5,22 @@ import { Vote } from "../../models/votes.types";
 import { addItemsToCharts, updateChart } from "../../utils/charts.utils";
 import { convertChartsToVotes } from "../../utils/votes.utils";
 import { getUserVotes, saveVotes } from "../../services/api/votesApi";
-import { VotingList } from "../Nominate/NominateList";
 import SaveIcon from "@material-ui/icons/Save";
 import { UserContext } from "../../services/UserContext";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { chartsParameters } from "../../config/config";
+import { VotingList } from "./VotingList";
+import { getNominatedAlbums } from "../../services/api/nominatedAlbumsApi";
+import { NominatedAlbums } from "../../models/nominatedAlbums.types";
 
 export const Voting: React.FC = () => {
   const { userData } = React.useContext(UserContext);
   const [charts, setCharts] = React.useState(
     chartsParameters.map(addItemsToCharts)
   );
+  const [nominatedAlbums, setNominatedAlbums] = React.useState<
+    NominatedAlbums[]
+  >([]);
   const [loading, setLoading] = React.useState(true);
   const [edit, setEdit] = React.useState(false);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -30,6 +35,13 @@ export const Voting: React.FC = () => {
   React.useEffect(() => {
     if (userData?.user?._id && loading) {
       const fetchData = async () => {
+        const resultsNominatedAlbums = await getNominatedAlbums([
+          "nomination-global-2020",
+          "nomination-czech-2020",
+        ]);
+
+        setNominatedAlbums(resultsNominatedAlbums.data);
+
         if (userData?.user === undefined) return;
         const oldVotes = await getUserVotes(userData.user._id, [
           "global-2020",
@@ -82,14 +94,26 @@ export const Voting: React.FC = () => {
       <h1>Hlasovat</h1>
       {loading ? <LoadingSpinner /> : null}
       <div style={{ display: loading ? "none" : "block" }}>
-        {charts.map((chart) => (
-          <VotingList
-            key={chart.type}
-            heading={chart.title}
-            items={chart.items}
-            onSetVotingList={handleSetChart}
-          />
-        ))}
+        <VotingList
+          heading={charts[0].title}
+          items={charts[0].items}
+          nominatedAlbums={
+            nominatedAlbums.filter(
+              (vote) => vote.type === "nomination-global-2020"
+            )[0]?.results ?? []
+          }
+          onSetVotingList={handleSetChart}
+        />
+        <VotingList
+          heading={charts[1].title}
+          items={charts[1].items}
+          nominatedAlbums={
+            nominatedAlbums.filter(
+              (vote) => vote.type === "nomination-czech-2020"
+            )[0]?.results ?? []
+          }
+          onSetVotingList={handleSetChart}
+        />
         <Button
           variant="contained"
           color="primary"

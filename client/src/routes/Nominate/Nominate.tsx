@@ -5,7 +5,7 @@ import { Vote } from "../../models/votes.types";
 import { addItemsToCharts, updateChart } from "../../utils/charts.utils";
 import { convertChartsToVotes } from "../../utils/votes.utils";
 import { getUserVotes, saveVotes } from "../../services/api/votesApi";
-import { VotingList } from "./NominateList";
+import { NominateList } from "./NominateList";
 import SaveIcon from "@material-ui/icons/Save";
 import { UserContext } from "../../services/UserContext";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
@@ -83,11 +83,11 @@ export const Nominate: React.FC = () => {
       {loading ? <LoadingSpinner /> : null}
       <div style={{ display: loading ? "none" : "block" }}>
         {charts.map((chart) => (
-          <VotingList
+          <NominateList
             key={chart.type}
             heading={chart.title}
             items={chart.items}
-            onSetVotingList={handleSetChart}
+            onSetNominateList={handleSetChart}
           />
         ))}
         <Button

@@ -41,7 +41,8 @@ export const getNominatedAlbums = async (
     },
     {
       $sort: {
-        countOfVoters: -1,
+        artist: 1,
+        album: 1,
       },
     },
     {

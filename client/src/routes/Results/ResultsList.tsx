@@ -30,14 +30,15 @@ export const ResultsList: React.FC = () => {
       <h2>Zahraniční desky</h2>
       <ResultsListTable
         results={
-          results.filter((vote) => vote.type === "global")[0]?.results ?? []
+          results.filter((vote) => vote.type === "global-2020")[0]?.results ??
+          []
         }
       />
 
       <h2>České desky</h2>
       <ResultsListTable
         results={
-          results.filter((vote) => vote.type === "czech")[0]?.results ?? []
+          results.filter((vote) => vote.type === "czech-2020")[0]?.results ?? []
         }
       />
     </div>

@@ -29,6 +29,7 @@ export const ChangeItem: React.FC<ChangeItemProps> = React.memo(
 
     return (
       <StyledTableRow>
+        <StyledTableCell>{vote.type}</StyledTableCell>
         <StyledTableCell component="th" scope="row">
           <RankBullet value={vote.rank} size={30} />
         </StyledTableCell>

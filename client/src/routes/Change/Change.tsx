@@ -106,6 +106,7 @@ export const Change: React.FC = () => {
         <Table aria-label="Tabulka pro úpravu hlasů">
           <TableHead>
             <StyledTableRow>
+              <StyledTableCell>Kategorie</StyledTableCell>
               <StyledTableCell>#</StyledTableCell>
               <StyledTableCell>Interpret</StyledTableCell>
               <StyledTableCell>Album</StyledTableCell>
