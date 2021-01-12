@@ -24,6 +24,7 @@ import { NotFound } from "./routes/NotFound/NotFound";
 import { Nominate } from "./routes/Nominate/Nominate";
 import { NominatedAlbumsList } from "./routes/NominatedAlbums/NominatedAlbums";
 import { Settings } from "./routes/Settings/Settings";
+import { isAdmin } from "./utils/users.utils";
 
 const theme = createMuiTheme({
   palette: {
@@ -40,9 +41,25 @@ const PrivateRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) => {
-        return userData?.user !== undefined ? (
-          children
-        ) : (
+        if (userData?.user !== undefined) {
+          if (
+            !isAdmin(userData.user?.role ?? []) &&
+            (location.pathname === "/voting" ||
+              location.pathname === "/results" ||
+              location.pathname === "/change")
+          ) {
+            return (
+              <Redirect
+                to={{
+                  pathname: "/",
+                  state: { from: location },
+                }}
+              />
+            );
+          }
+          return children;
+        }
+        return (
           <Redirect
             to={{
               pathname: "/login",
