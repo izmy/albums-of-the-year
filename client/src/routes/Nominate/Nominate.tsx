@@ -27,6 +27,38 @@ export const Nominate: React.FC = () => {
     });
   }, []);
 
+  const handleSwapVotes = React.useCallback((vote: Vote, type: string) => {
+    const newRank = type === "UP" ? vote.rank - 1 : vote.rank + 1;
+
+    setCharts((charts) => {
+      return charts.map((chart) => {
+        if (chart.type === vote.type) {
+          const voteA = chart.items.find((item) => item.rank === vote.rank);
+          const voteB = chart.items.find((item) => item.rank === newRank);
+
+          if (voteA !== undefined && voteB !== undefined) {
+            const newItems = chart.items.map((item) => {
+              if (item.rank === vote.rank) {
+                return { ...item, artist: voteB.artist, album: voteB.album };
+              }
+
+              if (item.rank === newRank) {
+                return { ...item, artist: voteA.artist, album: voteA.album };
+              }
+
+              return item;
+            });
+
+            return { ...chart, items: newItems };
+          }
+
+          return chart;
+        }
+        return chart;
+      });
+    });
+  }, []);
+
   React.useEffect(() => {
     if (userData?.user?._id && loading) {
       const fetchData = async () => {
@@ -88,6 +120,7 @@ export const Nominate: React.FC = () => {
             heading={chart.title}
             items={chart.items}
             onSetNominateList={handleSetChart}
+            onSwapVotes={handleSwapVotes}
           />
         ))}
         <Button
