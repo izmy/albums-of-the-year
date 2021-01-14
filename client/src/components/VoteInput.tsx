@@ -1,4 +1,4 @@
-import { TextField } from "@material-ui/core";
+import { IconButton, TextField } from "@material-ui/core";
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import * as React from "react";
 import { SpotifyAlbumSimplified, SpotifyArtist } from "../models/spotify.types";
@@ -6,14 +6,17 @@ import { Vote } from "../models/votes.types";
 import { searchByType } from "../services/api/spotifyApi";
 import { RankBullet } from "./RankBullet";
 import { StyledTableCell, StyledTableRow } from "./StyledTable";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 
 interface VoteInputProps {
   vote: Vote;
   onSetVote: (vote: Vote) => void;
+  onSwapVotes: (vote: Vote, type: string) => void;
 }
 
 export const VoteInput: React.FC<VoteInputProps> = React.memo(
-  ({ vote, onSetVote }) => {
+  ({ vote, onSetVote, onSwapVotes }) => {
     const [artists, setArtists] = React.useState<SpotifyArtist[]>([]);
     const [albums, setAlbums] = React.useState<SpotifyAlbumSimplified[]>([]);
 
@@ -120,6 +123,14 @@ export const VoteInput: React.FC<VoteInputProps> = React.memo(
               return filtered;
             }}
           />
+        </StyledTableCell>
+        <StyledTableCell>
+          <IconButton onClick={() => onSwapVotes(vote, "UP")}>
+            <ArrowUpwardIcon />
+          </IconButton>
+          <IconButton onClick={() => onSwapVotes(vote, "DOWN")}>
+            <ArrowDownwardIcon />
+          </IconButton>
         </StyledTableCell>
       </StyledTableRow>
     );
