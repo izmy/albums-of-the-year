@@ -8,4 +8,5 @@ export type Vote = {
   write: boolean;
   type?: ChartType;
   userId?: string;
+  searchText?: string;
 };

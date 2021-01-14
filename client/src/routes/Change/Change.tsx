@@ -31,10 +31,6 @@ export const Change: React.FC = () => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const allVotes = await getAllVotes();
-      setVotes(allVotes.data);
-      setFilteredVotes(allVotes.data);
-
       const allUsers = await getAllUsers();
       const allUsersInObject = allUsers.data.reduce((acc, curr) => {
         acc[curr._id] = curr;
@@ -43,6 +39,18 @@ export const Change: React.FC = () => {
       }, {}) as UserList;
 
       setUsers(allUsersInObject);
+
+      const allVotes = await getAllVotes();
+      setVotes(
+        allVotes.data.map((vote) => ({
+          ...vote,
+          searchText: `${vote.artist} ${vote.album} ${
+            vote.userId ? allUsersInObject[vote.userId]?.name : ""
+          } [${vote.rank}]`.toLowerCase(),
+        }))
+      );
+      setFilteredVotes(allVotes.data);
+
       setLoading(false);
     };
 
@@ -52,8 +60,7 @@ export const Change: React.FC = () => {
   const filterVotes = React.useCallback(
     (filteredValue: string, sourceVotes: Vote[]) => {
       const filteredVotes = sourceVotes.filter((vote) => {
-        const value = `${vote.artist} ${vote.album}`.toLowerCase();
-        return value.includes(filteredValue);
+        return vote.searchText?.includes(filteredValue);
       });
       setFilteredVotes(filteredVotes);
     },

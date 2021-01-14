@@ -11,10 +11,12 @@ import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 
 interface ResultsListTableProps {
   results: Result[];
+  showWriteColumn: boolean;
 }
 
 export const ResultsListTable: React.FC<ResultsListTableProps> = ({
   results,
+  showWriteColumn,
 }) => {
   return (
     <TableContainer component={Paper}>
@@ -26,7 +28,7 @@ export const ResultsListTable: React.FC<ResultsListTableProps> = ({
             <StyledTableCell>Album</StyledTableCell>
             <StyledTableCell>Hlasy</StyledTableCell>
             <StyledTableCell>Body</StyledTableCell>
-            <StyledTableCell>Píše</StyledTableCell>
+            {showWriteColumn ? <StyledTableCell>Píše</StyledTableCell> : null}
           </StyledTableRow>
         </TableHead>
         <TableBody>
@@ -39,9 +41,11 @@ export const ResultsListTable: React.FC<ResultsListTableProps> = ({
                 {result.ranks.length}
               </StyledTableCell>
               <StyledTableCell scope="row">{result.points}</StyledTableCell>
-              <StyledTableCell scope="row">
-                {result.writeByUser !== undefined ? result.writeByUser : "-"}
-              </StyledTableCell>
+              {showWriteColumn ? (
+                <StyledTableCell scope="row">
+                  {result.writeByUser !== undefined ? result.writeByUser : "-"}
+                </StyledTableCell>
+              ) : null}
             </StyledTableRow>
           ))}
         </TableBody>

@@ -33,6 +33,7 @@ export const ResultsList: React.FC = () => {
           results.filter((vote) => vote.type === "global-2020")[0]?.results ??
           []
         }
+        showWriteColumn={true}
       />
 
       <h2>České desky</h2>
@@ -40,6 +41,7 @@ export const ResultsList: React.FC = () => {
         results={
           results.filter((vote) => vote.type === "czech-2020")[0]?.results ?? []
         }
+        showWriteColumn={true}
       />
     </div>
   );
