@@ -22,7 +22,6 @@ import { ResultsListTable } from "../Results/ResultsListTable";
 import { NominatedAlbumsListTable } from "./NominatedAlbumsTable";
 
 export const NominatedAlbumsList: React.FC = () => {
-  const { userData } = React.useContext(UserContext);
   const [results, setResults] = React.useState<Results[]>([]);
   const [nominatedAlbums, setNominatedAlbums] = React.useState<
     NominatedAlbums[]
@@ -76,20 +75,16 @@ export const NominatedAlbumsList: React.FC = () => {
             control={<Radio />}
             label="Abecední seznam"
           />
-          {isAdmin(userData?.user?.role ?? []) ? (
-            <>
-              <FormControlLabel
-                value="RESULTS"
-                control={<Radio />}
-                label="Seřazené výsledky"
-              />
-              <FormControlLabel
-                value="VOTERS"
-                control={<Radio />}
-                label="Hlasující"
-              />
-            </>
-          ) : null}
+          <FormControlLabel
+            value="RESULTS"
+            control={<Radio />}
+            label="Seřazené výsledky"
+          />
+          <FormControlLabel
+            value="VOTERS"
+            control={<Radio />}
+            label="Hlasující"
+          />
         </RadioGroup>
       </FormControl>
 
