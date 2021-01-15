@@ -43,7 +43,6 @@ export const NominatedAlbumsList: React.FC = () => {
       setResults(results.data);
 
       const usersVotesCount = await getUsersVotesCount();
-      console.log(usersVotesCount);
       setUsersVotesCount(usersVotesCount.data);
 
       setLoading(false);

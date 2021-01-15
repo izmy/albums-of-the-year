@@ -1,22 +1,25 @@
-import { TextField } from "@material-ui/core";
+import { IconButton, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import * as React from "react";
-import { NominatedAlbum } from "../models/nominatedAlbums.types";
 import { Vote } from "../models/votes.types";
 import { RankBullet } from "./RankBullet";
 import { StyledTableCell, StyledTableRow } from "./StyledTable";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import { Result } from "../models/results.types";
 
 interface VoteSelectProps {
   vote: Vote;
-  nominatedAlbums: NominatedAlbum[];
+  nominatedAlbumsResults: Result[];
   onSetVote: (vote: Vote) => void;
+  onSwapVotes: (vote: Vote, type: string) => void;
 }
 
 export const VoteSelect: React.FC<VoteSelectProps> = React.memo(
-  ({ vote, nominatedAlbums, onSetVote }) => {
+  ({ vote, nominatedAlbumsResults, onSetVote, onSwapVotes }) => {
     const handleSelectAlbum = async (
       _event: React.ChangeEvent<{}>,
-      value: NominatedAlbum | null
+      value: Result | null
     ) => {
       const newVote = value
         ? { ...vote, artist: value.artist, album: value.album }
@@ -31,11 +34,11 @@ export const VoteSelect: React.FC<VoteSelectProps> = React.memo(
         </StyledTableCell>
         <StyledTableCell>
           <Autocomplete
-            options={nominatedAlbums}
+            options={nominatedAlbumsResults}
             getOptionLabel={(option) => `${option.artist} - ${option.album}`}
             style={{ width: 600 }}
             value={
-              nominatedAlbums.find(
+              nominatedAlbumsResults.find(
                 (nominatedAlbum) =>
                   nominatedAlbum.artist === vote.artist &&
                   nominatedAlbum.album === vote.album
@@ -50,6 +53,14 @@ export const VoteSelect: React.FC<VoteSelectProps> = React.memo(
               />
             )}
           />
+        </StyledTableCell>
+        <StyledTableCell>
+          <IconButton onClick={() => onSwapVotes(vote, "UP")}>
+            <ArrowUpwardIcon />
+          </IconButton>
+          <IconButton onClick={() => onSwapVotes(vote, "DOWN")}>
+            <ArrowDownwardIcon />
+          </IconButton>
         </StyledTableCell>
       </StyledTableRow>
     );

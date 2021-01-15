@@ -9,33 +9,36 @@ import {
 } from "@material-ui/core";
 import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 import { VoteSelect } from "../../components/VoteSelect";
-import { NominatedAlbum } from "../../models/nominatedAlbums.types";
+import { Result } from "../../models/results.types";
 
 interface VotingListProps {
   heading: string;
   items: Vote[];
-  nominatedAlbums: NominatedAlbum[];
+  nominatedAlbumsResults: Result[];
   onSetVotingList: (vote: Vote) => void;
+  onSwapVotes: (vote: Vote, type: string) => void;
 }
 
 export const VotingList: React.FC<VotingListProps> = ({
   heading,
   items,
-  nominatedAlbums,
+  nominatedAlbumsResults,
   onSetVotingList,
+  onSwapVotes,
 }) => {
   return (
     <div>
       <h2>{heading}</h2>
       <TableContainer
         component={Paper}
-        style={{ maxWidth: "700px", margin: "auto" }}
+        style={{ maxWidth: "780px", margin: "auto" }}
       >
         <Table aria-label="Hlasovací tabulka">
           <TableHead>
             <StyledTableRow>
               <StyledTableCell>#</StyledTableCell>
               <StyledTableCell>Interpret - Album</StyledTableCell>
+              <StyledTableCell></StyledTableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody>
@@ -43,8 +46,9 @@ export const VotingList: React.FC<VotingListProps> = ({
               <VoteSelect
                 key={`${vote.type}-${vote.rank}`}
                 vote={vote}
-                nominatedAlbums={nominatedAlbums}
+                nominatedAlbumsResults={nominatedAlbumsResults}
                 onSetVote={onSetVotingList}
+                onSwapVotes={onSwapVotes}
               />
             ))}
           </TableBody>
