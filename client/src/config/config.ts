@@ -6,8 +6,8 @@ export const nominationChartsParameters: ChartParameters[] = [
 ];
 
 export const chartsParameters: ChartParameters[] = [
-  { title: "Zahraniční alba", type: "global-2020", size: 20 },
-  { title: "Česká alba", type: "czech-2020", size: 10 },
+  { title: "Zahraniční alba", type: "global-2020", size: 40 },
+  { title: "Česká alba", type: "czech-2020", size: 20 },
 ];
 
 export const deadline = {
