@@ -16,8 +16,6 @@ import { NominatedAlbums } from "../../models/nominatedAlbums.types";
 import { Results } from "../../models/results.types";
 import { getNominatedAlbums } from "../../services/api/nominatedAlbumsApi";
 import { getResults, getUsersVotesCount } from "../../services/api/resultsApi";
-import { UserContext } from "../../services/UserContext";
-import { isAdmin } from "../../utils/users.utils";
 import { ResultsListTable } from "../Results/ResultsListTable";
 import { NominatedAlbumsListTable } from "./NominatedAlbumsTable";
 
@@ -160,6 +158,35 @@ export const NominatedAlbumsList: React.FC = () => {
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
+                <StyledTableRow>
+                  <StyledTableCell>
+                    <strong>Celkem hlasovalo: {usersVotesCount.length}</strong>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <strong>
+                      Celkem:{" "}
+                      {usersVotesCount.reduce((acc, curr) => {
+                        const count =
+                          curr.votes?.find(
+                            (v) => v.type === "nomination-global-2020"
+                          )?.count ?? 0;
+                        return acc + count;
+                      }, 0)}
+                    </strong>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <strong>
+                      Celkem:{" "}
+                      {usersVotesCount.reduce((acc, curr) => {
+                        const count =
+                          curr.votes?.find(
+                            (v) => v.type === "nomination-czech-2020"
+                          )?.count ?? 0;
+                        return acc + count;
+                      }, 0)}
+                    </strong>
+                  </StyledTableCell>
+                </StyledTableRow>
               </TableBody>
             </Table>
           </TableContainer>
