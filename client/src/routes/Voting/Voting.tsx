@@ -74,13 +74,13 @@ export const Voting: React.FC = () => {
           if (results.type === "nomination-global-2020") {
             return {
               ...results,
-              results: results.results.slice(0, 40),
+              results: results.results.slice(0, 60),
             };
           }
           if (results.type === "nomination-czech-2020") {
             return {
               ...results,
-              results: results.results.slice(0, 20),
+              results: results.results.slice(0, 30),
             };
           }
           return results;
