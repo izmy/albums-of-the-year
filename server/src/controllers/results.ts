@@ -221,6 +221,9 @@ export const getUsersResults = async (
         user: {
           $first: "$user.name",
         },
+        showVotes: {
+          $first: "$user.showVotes",
+        },
         type: {
           $first: "$type",
         },
@@ -240,6 +243,9 @@ export const getUsersResults = async (
         },
         user: {
           $first: "$user",
+        },
+        showVotes: {
+          $first: "$showVotes",
         },
         votes: {
           $push: {

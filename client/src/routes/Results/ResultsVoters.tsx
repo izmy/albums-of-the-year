@@ -91,7 +91,8 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
       <h2>Hlasující</h2>
 
       {user ? (
-        userList.includes(user.name) ? (
+        usersVotes.find((usersVote) => usersVote.user === user.name)
+          ?.showVotes ? (
           <DisableButton
             variant="contained"
             color="default"
