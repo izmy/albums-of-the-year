@@ -16,10 +16,11 @@ import { getAllVotes, updateVote } from "../../services/api/votesApi";
 import { ChangeItem } from "./ChangeItem";
 import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 
+const MAX_VOTES = 200;
+
 const FilterTextField = styled(TextField)`
   width: 100%;
   max-width: 500px;
-  margin-bottom: 50px;
 `;
 
 export const Change: React.FC = () => {
@@ -49,7 +50,7 @@ export const Change: React.FC = () => {
           } [${vote.rank}]`.toLowerCase(),
         }))
       );
-      setFilteredVotes(allVotes.data);
+      setFilteredVotes(allVotes.data.slice(0, MAX_VOTES));
 
       setLoading(false);
     };
@@ -62,7 +63,7 @@ export const Change: React.FC = () => {
       const filteredVotes = sourceVotes.filter((vote) => {
         return vote.searchText?.includes(filteredValue);
       });
-      setFilteredVotes(filteredVotes);
+      setFilteredVotes(filteredVotes.slice(0, MAX_VOTES));
     },
     []
   );
@@ -108,6 +109,10 @@ export const Change: React.FC = () => {
         value={filter}
         onChange={handleFilter}
       />
+
+      <p style={{ marginBottom: "20px" }}>
+        Zobrazeno {filteredVotes.length} z {votes.length} hlasů.
+      </p>
 
       <TableContainer component={Paper}>
         <Table aria-label="Tabulka pro úpravu hlasů">

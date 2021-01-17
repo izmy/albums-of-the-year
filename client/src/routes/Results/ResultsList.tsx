@@ -61,13 +61,11 @@ export const ResultsList: React.FC = () => {
             control={<Radio />}
             label="Statistika hlasů"
           />
-          {isAdmin(userData?.user?.role ?? []) ? (
-            <FormControlLabel
-              value="VOTERS"
-              control={<Radio />}
-              label="Hlasující"
-            />
-          ) : null}
+          <FormControlLabel
+            value="VOTERS"
+            control={<Radio />}
+            label="Hlasující"
+          />
         </RadioGroup>
       </FormControl>
 

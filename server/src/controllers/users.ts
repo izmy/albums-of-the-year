@@ -108,16 +108,22 @@ export const patchUser = async (
 ) => {
   const user = await User.findById({ _id: req.verifiedUser?._id });
 
-  if (!user?.role.includes(Role.ADMIN)) {
-    return res
-      .status(401)
-      .json({ msg: "Endpoint is only available to the admin." });
+  if (
+    !req.body.hasOwnProperty("role") &&
+    !req.body.hasOwnProperty("name") &&
+    !req.body.hasOwnProperty("showVotes")
+  ) {
+    return res.status(401).json({
+      msg: `It is possible to change the properties "name", "role" and "showVotes".`,
+    });
   }
 
-  if (!req.body.hasOwnProperty("role") && !req.body.hasOwnProperty("name")) {
-    return res.status(401).json({
-      msg: `It is possible to change the properties "name" and "role".`,
-    });
+  if (req.body.role !== undefined) {
+    if (!user?.role.includes(Role.ADMIN)) {
+      return res
+        .status(401)
+        .json({ msg: "The roles can change just the admins." });
+    }
   }
 
   try {

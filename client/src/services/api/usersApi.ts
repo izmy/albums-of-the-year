@@ -73,3 +73,22 @@ export const updateUserRole = async (userId: string, newRole: Role[]) => {
     }
   );
 };
+
+export const updateUserShowVotes = async (
+  userId: string,
+  showVotes: boolean
+) => {
+  const token = localStorage.getItem("auth-token");
+
+  return axios.patch<User[]>(
+    `${process.env.REACT_APP_BACKEND_API_URL}/v1/users/${userId}`,
+    {
+      showVotes,
+    },
+    {
+      headers: {
+        "x-auth-token": token,
+      },
+    }
+  );
+};

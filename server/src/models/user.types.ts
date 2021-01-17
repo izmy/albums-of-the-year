@@ -12,6 +12,7 @@ export interface User extends mongoose.Document {
   password: string;
   role: Role[];
   picture: string;
+  showVotes: boolean;
 }
 
 const userSchema = new mongoose.Schema({
@@ -20,6 +21,7 @@ const userSchema = new mongoose.Schema({
   picture: { type: String, required: false },
   password: { type: String, required: false },
   role: { type: [String], required: false },
+  showVotes: { type: Boolean, required: false },
 });
 
 export default mongoose.model<User>("users", userSchema);

@@ -8,6 +8,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import { ResultsVotersTable } from "./ResultsVotersTable";
 import { User } from "../../models/user.types";
+import { updateUserShowVotes } from "../../services/api/usersApi";
 
 const DisableButton = styled(Button)`
   text-decoration: none;
@@ -33,6 +34,12 @@ const EnableButton = styled(Button)`
   }
 `;
 
+const SelectUser = styled.div`
+  max-width: 300px;
+  text-align: left;
+  margin: 0 auto 40px;
+`;
+
 interface ResultsVotersProps {
   user?: User;
 }
@@ -44,55 +51,70 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      const usersVotes = await getUsersVotes();
-      setUsersVotes(usersVotes.data);
-
-      const userList = usersVotes.data.map((user) => user.user);
-      setUserList(userList);
-
-      setLoading(false);
+    const fetchData = () => {
+      loadUsersVotes();
     };
     fetchData();
   }, []);
 
-  const handleEnableShowVotes = () => {};
+  const loadUsersVotes = async () => {
+    setLoading(true);
+    const usersVotes = await getUsersVotes();
+    setUsersVotes(usersVotes.data);
+
+    const userList = usersVotes.data.map((user) => user.user);
+    setUserList(userList);
+    setLoading(false);
+  };
+
+  const handleSetShowVotes = async (user: User, show: boolean) => {
+    if (user._id) {
+      await updateUserShowVotes(user._id, show);
+      await loadUsersVotes();
+
+      if (selectedUser === user.name) {
+        setSelectedUser("");
+      }
+    }
+  };
 
   const handleChangeUser = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedUser(event.target.value as string);
   };
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <>
       <h2>Hlasující</h2>
 
-      {loading ? <LoadingSpinner /> : null}
+      {user ? (
+        userList.includes(user.name) ? (
+          <DisableButton
+            variant="contained"
+            color="default"
+            size="large"
+            onClick={() => handleSetShowVotes(user, false)}
+            startIcon={<CloseIcon />}
+          >
+            Zakázat zobrazení mých hlasů ostatním
+          </DisableButton>
+        ) : (
+          <EnableButton
+            variant="contained"
+            color="default"
+            size="large"
+            onClick={() => handleSetShowVotes(user, true)}
+            startIcon={<CheckIcon />}
+          >
+            Povolit zobrazení mých hlasů ostatním
+          </EnableButton>
+        )
+      ) : null}
 
-      {user && userList.includes(user.name) ? (
-        <DisableButton
-          variant="contained"
-          color="default"
-          size="large"
-          onClick={handleEnableShowVotes}
-          startIcon={<CloseIcon />}
-        >
-          Zakázat zobrazení mých hlasů ostatním
-        </DisableButton>
-      ) : (
-        <EnableButton
-          variant="contained"
-          color="default"
-          size="large"
-          onClick={handleEnableShowVotes}
-          startIcon={<CheckIcon />}
-        >
-          Povolit zobrazení mých hlasů ostatním
-        </EnableButton>
-      )}
-
-      <div
-        style={{ maxWidth: "300px", textAlign: "left", margin: "0 auto 40px" }}
-      >
+      <SelectUser>
         <FormControl variant="outlined" fullWidth={true}>
           <InputLabel>Uživatel</InputLabel>
           <Select
@@ -108,45 +130,53 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
             ))}
           </Select>
         </FormControl>
-      </div>
+      </SelectUser>
 
-      <ResultsVotersTable
-        title={"Nominace - Zahraniční alba"}
-        votes={
-          usersVotes
-            ?.find((usersVotes) => usersVotes.user === selectedUser)
-            ?.votes.find((votes) => votes.type === "nomination-global-2020")
-            ?.votes ?? []
-        }
-      />
+      {selectedUser !== "" ? (
+        <>
+          <ResultsVotersTable
+            title={"Nominace - Zahraniční alba"}
+            votes={
+              usersVotes
+                ?.find((usersVotes) => usersVotes.user === selectedUser)
+                ?.votes.find((votes) => votes.type === "nomination-global-2020")
+                ?.votes ?? []
+            }
+          />
 
-      <ResultsVotersTable
-        title={"Finále - Zahraniční alba"}
-        votes={
-          usersVotes
-            ?.find((usersVotes) => usersVotes.user === selectedUser)
-            ?.votes.find((votes) => votes.type === "global-2020")?.votes ?? []
-        }
-      />
+          <ResultsVotersTable
+            title={"Finále - Zahraniční alba"}
+            votes={
+              usersVotes
+                ?.find((usersVotes) => usersVotes.user === selectedUser)
+                ?.votes.find((votes) => votes.type === "global-2020")?.votes ??
+              []
+            }
+          />
 
-      <ResultsVotersTable
-        title={"Nominace - Česká alba"}
-        votes={
-          usersVotes
-            ?.find((usersVotes) => usersVotes.user === selectedUser)
-            ?.votes.find((votes) => votes.type === "nomination-czech-2020")
-            ?.votes ?? []
-        }
-      />
+          <ResultsVotersTable
+            title={"Nominace - Česká alba"}
+            votes={
+              usersVotes
+                ?.find((usersVotes) => usersVotes.user === selectedUser)
+                ?.votes.find((votes) => votes.type === "nomination-czech-2020")
+                ?.votes ?? []
+            }
+          />
 
-      <ResultsVotersTable
-        title={"Finále - Česká alba"}
-        votes={
-          usersVotes
-            ?.find((usersVotes) => usersVotes.user === selectedUser)
-            ?.votes.find((votes) => votes.type === "czech-2020")?.votes ?? []
-        }
-      />
+          <ResultsVotersTable
+            title={"Finále - Česká alba"}
+            votes={
+              usersVotes
+                ?.find((usersVotes) => usersVotes.user === selectedUser)
+                ?.votes.find((votes) => votes.type === "czech-2020")?.votes ??
+              []
+            }
+          />
+        </>
+      ) : (
+        <p>Není vybrán žádný uživatel.</p>
+      )}
     </>
   );
 };

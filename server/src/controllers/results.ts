@@ -1,5 +1,7 @@
 import * as express from "express";
+import { RequestWithVerifiedUserData } from "../middleware/auth";
 import Vote from "../models/vote.types";
+import User, { Role } from "../models/user.types";
 
 export const getResults = async (
   req: express.Request,
@@ -182,9 +184,11 @@ export const getUsersVotesCount = async (
 };
 
 export const getUsersResults = async (
-  req: express.Request,
+  req: RequestWithVerifiedUserData,
   res: express.Response
 ) => {
+  const user = await User.findById({ _id: req.verifiedUser?._id });
+
   const votes = await Vote.aggregate([
     {
       $lookup: {
@@ -199,11 +203,9 @@ export const getUsersResults = async (
         path: "$user",
       },
     },
-    // {
-    //   $match: {
-    //     "user.show": true,
-    //   },
-    // },
+    {
+      $match: user?.role.includes(Role.ADMIN) ? {} : { "user.showVotes": true },
+    },
     {
       $sort: {
         rank: 1,
