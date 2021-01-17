@@ -1,21 +1,15 @@
+import * as React from "react";
 import {
   FormControl,
   FormControlLabel,
-  Paper,
   Radio,
   RadioGroup,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
 } from "@material-ui/core";
-import * as React from "react";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 import { NominatedAlbums } from "../../models/nominatedAlbums.types";
 import { Results } from "../../models/results.types";
 import { getNominatedAlbums } from "../../services/api/nominatedAlbumsApi";
-import { getResults, getUsersVotesCount } from "../../services/api/resultsApi";
+import { getResults } from "../../services/api/resultsApi";
 import { ResultsListTable } from "../Results/ResultsListTable";
 import { NominatedAlbumsListTable } from "./NominatedAlbumsTable";
 
@@ -24,8 +18,7 @@ export const NominatedAlbumsList: React.FC = () => {
   const [nominatedAlbums, setNominatedAlbums] = React.useState<
     NominatedAlbums[]
   >([]);
-  const [usersVotesCount, setUsersVotesCount] = React.useState<any[]>([]);
-  const [submenu, setSubmenu] = React.useState("NOMINATED");
+  const [submenu, setSubmenu] = React.useState("RESULTS");
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -38,9 +31,6 @@ export const NominatedAlbumsList: React.FC = () => {
 
       const results = await getResults();
       setResults(results.data);
-
-      const usersVotesCount = await getUsersVotesCount();
-      setUsersVotesCount(usersVotesCount.data);
 
       setLoading(false);
     };
@@ -69,19 +59,14 @@ export const NominatedAlbumsList: React.FC = () => {
           onChange={handleChangeTable}
         >
           <FormControlLabel
-            value="NOMINATED"
-            control={<Radio />}
-            label="Abecední seznam"
-          />
-          <FormControlLabel
             value="RESULTS"
             control={<Radio />}
             label="Seřazené výsledky"
           />
           <FormControlLabel
-            value="VOTERS"
+            value="NOMINATED"
             control={<Radio />}
-            label="Hlasující"
+            label="Abecední seznam"
           />
         </RadioGroup>
       </FormControl>
@@ -127,69 +112,6 @@ export const NominatedAlbumsList: React.FC = () => {
             }
             showWriteColumn={false}
           />
-        </>
-      ) : null}
-
-      {submenu === "VOTERS" ? (
-        <>
-          <h2>Seznam hlasujících</h2>
-          <TableContainer component={Paper}>
-            <Table aria-label="Tabulka hlasů">
-              <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell>Jméno</StyledTableCell>
-                  <StyledTableCell>Zahraniční nominace</StyledTableCell>
-                  <StyledTableCell>České nominace</StyledTableCell>
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {usersVotesCount.map((u) => (
-                  <StyledTableRow key={u.user}>
-                    <StyledTableCell scope="row">{u.user}</StyledTableCell>
-                    <StyledTableCell scope="row">
-                      {u.votes.find(
-                        (vote) => vote.type === "nomination-global-2020"
-                      )?.count ?? 0}
-                    </StyledTableCell>
-                    <StyledTableCell scope="row">
-                      {u.votes.find(
-                        (vote) => vote.type === "nomination-czech-2020"
-                      )?.count ?? 0}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-                <StyledTableRow>
-                  <StyledTableCell>
-                    <strong>Celkem hlasovalo: {usersVotesCount.length}</strong>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <strong>
-                      Celkem:{" "}
-                      {usersVotesCount.reduce((acc, curr) => {
-                        const count =
-                          curr.votes?.find(
-                            (v) => v.type === "nomination-global-2020"
-                          )?.count ?? 0;
-                        return acc + count;
-                      }, 0)}
-                    </strong>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <strong>
-                      Celkem:{" "}
-                      {usersVotesCount.reduce((acc, curr) => {
-                        const count =
-                          curr.votes?.find(
-                            (v) => v.type === "nomination-czech-2020"
-                          )?.count ?? 0;
-                        return acc + count;
-                      }, 0)}
-                    </strong>
-                  </StyledTableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
         </>
       ) : null}
     </div>

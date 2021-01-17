@@ -45,7 +45,6 @@ const PrivateRoute = ({ children, ...rest }) => {
           if (
             !isAdmin(userData.user?.role ?? []) &&
             (location.pathname === "/nominate" ||
-              location.pathname === "/results" ||
               location.pathname === "/change")
           ) {
             return (

@@ -180,3 +180,84 @@ export const getUsersVotesCount = async (
 
   res.json(votesCount);
 };
+
+export const getUsersResults = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const votes = await Vote.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
+      },
+    },
+    // {
+    //   $match: {
+    //     "user.show": true,
+    //   },
+    // },
+    {
+      $sort: {
+        rank: 1,
+      },
+    },
+    {
+      $group: {
+        _id: {
+          userId: "$user._id",
+          user: "$user.name",
+          type: "$type",
+        },
+        user: {
+          $first: "$user.name",
+        },
+        type: {
+          $first: "$type",
+        },
+        votes: {
+          $push: {
+            rank: "$rank",
+            artist: "$artist",
+            album: "$album",
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          user: "$user",
+        },
+        user: {
+          $first: "$user",
+        },
+        votes: {
+          $push: {
+            type: "$type",
+            votes: "$votes",
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+    {
+      $sort: {
+        user: 1,
+      },
+    },
+  ]);
+
+  res.json(votes);
+};

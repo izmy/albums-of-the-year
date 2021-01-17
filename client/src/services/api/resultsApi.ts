@@ -28,3 +28,17 @@ export const getUsersVotesCount = () => {
     }
   );
 };
+
+export const getUsersVotes = () => {
+  const token = localStorage.getItem("auth-token");
+
+  return axios.get<any[]>(
+    `${process.env.REACT_APP_BACKEND_API_URL}/v1/results/users-votes`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": token,
+      },
+    }
+  );
+};

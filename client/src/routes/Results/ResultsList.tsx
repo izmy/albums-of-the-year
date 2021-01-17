@@ -1,11 +1,23 @@
+import {
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+} from "@material-ui/core";
 import * as React from "react";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { Results } from "../../models/results.types";
 import { getResults } from "../../services/api/resultsApi";
+import { UserContext } from "../../services/UserContext";
+import { isAdmin } from "../../utils/users.utils";
 import { ResultsListTable } from "./ResultsListTable";
+import { ResultsStats } from "./ResultsStats";
+import { ResultsVoters } from "./ResultsVoters";
 
 export const ResultsList: React.FC = () => {
+  const { userData } = React.useContext(UserContext);
   const [results, setResults] = React.useState<Results[]>([]);
+  const [submenu, setSubmenu] = React.useState("RESULTS");
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -19,6 +31,10 @@ export const ResultsList: React.FC = () => {
     fetchData();
   }, []);
 
+  const handleChangeTable = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmenu((event.target as HTMLInputElement).value);
+  };
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -27,22 +43,62 @@ export const ResultsList: React.FC = () => {
     <div>
       <h1>Výsledky hlasování</h1>
 
-      <h2>Zahraniční desky</h2>
-      <ResultsListTable
-        results={
-          results.filter((vote) => vote.type === "global-2020")[0]?.results ??
-          []
-        }
-        showWriteColumn={true}
-      />
+      <FormControl>
+        <RadioGroup
+          row
+          aria-label="submenu"
+          name="submenu"
+          value={submenu}
+          onChange={handleChangeTable}
+        >
+          <FormControlLabel
+            value="RESULTS"
+            control={<Radio />}
+            label="Seřazené výsledky"
+          />
+          <FormControlLabel
+            value="STATS"
+            control={<Radio />}
+            label="Statistika hlasů"
+          />
+          {isAdmin(userData?.user?.role ?? []) ? (
+            <FormControlLabel
+              value="VOTERS"
+              control={<Radio />}
+              label="Hlasující"
+            />
+          ) : null}
+        </RadioGroup>
+      </FormControl>
 
-      <h2>České desky</h2>
-      <ResultsListTable
-        results={
-          results.filter((vote) => vote.type === "czech-2020")[0]?.results ?? []
-        }
-        showWriteColumn={true}
-      />
+      {submenu === "RESULTS" ? (
+        isAdmin(userData?.user?.role ?? []) ? (
+          <>
+            <h2>Zahraniční alba</h2>
+            <ResultsListTable
+              results={
+                results.filter((vote) => vote.type === "global-2020")[0]
+                  ?.results ?? []
+              }
+              showWriteColumn={true}
+            />
+
+            <h2>Česká alba</h2>
+            <ResultsListTable
+              results={
+                results.filter((vote) => vote.type === "czech-2020")[0]
+                  ?.results ?? []
+              }
+              showWriteColumn={true}
+            />
+          </>
+        ) : (
+          <p>Výsledky zatím nejsou k dispozici.</p>
+        )
+      ) : null}
+
+      {submenu === "STATS" ? <ResultsStats /> : null}
+      {submenu === "VOTERS" ? <ResultsVoters user={userData?.user} /> : null}
     </div>
   );
 };
