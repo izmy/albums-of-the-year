@@ -47,7 +47,7 @@ export const Change: React.FC = () => {
           ...vote,
           searchText: `${vote.artist} ${vote.album} ${
             vote.userId ? allUsersInObject[vote.userId]?.name : ""
-          } [${vote.rank}]`.toLowerCase(),
+          }`.toLowerCase(),
         }))
       );
       setFilteredVotes(allVotes.data.slice(0, MAX_VOTES));

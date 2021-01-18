@@ -38,6 +38,12 @@ export const getResults = async (
       },
     },
     {
+      $sort: {
+        type: 1,
+        rank: 1,
+      },
+    },
+    {
       $group: {
         _id: {
           artist: "$artist",
@@ -56,6 +62,9 @@ export const getResults = async (
         points: {
           $sum: "$points",
         },
+        countOfVoters: {
+          $sum: 1,
+        },
         type: {
           $first: "$type",
         },
@@ -71,6 +80,7 @@ export const getResults = async (
         artist: 1,
         album: 1,
         ranks: 1,
+        countOfVoters: 1,
         writeByUser: {
           $arrayElemAt: [
             {
@@ -88,7 +98,7 @@ export const getResults = async (
     {
       $sort: {
         points: -1,
-        ranks: -1,
+        countOfVoters: -1,
       },
     },
     {
