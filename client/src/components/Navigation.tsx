@@ -81,11 +81,13 @@ export const Navigation: React.FC<NavigationProps> = ({ role }) => {
             Nominovaná alba
           </StyledNavLink>
         </Item>
-        <Item>
-          <StyledNavLink exact to="/voting" activeClassName="active">
-            Hlasovat
-          </StyledNavLink>
-        </Item>
+        {isAdmin(role) ? (
+          <Item>
+            <StyledNavLink exact to="/voting" activeClassName="active">
+              Hlasovat
+            </StyledNavLink>
+          </Item>
+        ) : null}
         <Item>
           <StyledNavLink exact to="/results" activeClassName="active">
             Výsledky

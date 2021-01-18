@@ -9,7 +9,6 @@ import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { Results } from "../../models/results.types";
 import { getResults } from "../../services/api/resultsApi";
 import { UserContext } from "../../services/UserContext";
-import { isAdmin } from "../../utils/users.utils";
 import { ResultsListTable } from "./ResultsListTable";
 import { ResultsStats } from "./ResultsStats";
 import { ResultsVoters } from "./ResultsVoters";
@@ -70,7 +69,7 @@ export const ResultsList: React.FC = () => {
       </FormControl>
 
       {submenu === "RESULTS" ? (
-        isAdmin(userData?.user?.role ?? []) ? (
+        true ? (
           <>
             <h2>Zahraniční alba</h2>
             <ResultsListTable
