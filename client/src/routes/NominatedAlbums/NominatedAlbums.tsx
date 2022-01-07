@@ -12,20 +12,23 @@ import { getNominatedAlbums } from "../../services/api/nominatedAlbumsApi";
 import { getResults } from "../../services/api/resultsApi";
 import { ResultsListTable } from "../Results/ResultsListTable";
 import { NominatedAlbumsListTable } from "./NominatedAlbumsTable";
+import { isAdmin } from "../../utils/users.utils";
+import { UserContext } from "../../services/UserContext";
 
 export const NominatedAlbumsList: React.FC = () => {
   const [results, setResults] = React.useState<Results[]>([]);
   const [nominatedAlbums, setNominatedAlbums] = React.useState<
     NominatedAlbums[]
   >([]);
-  const [submenu, setSubmenu] = React.useState("RESULTS");
+  const [submenu, setSubmenu] = React.useState("NOMINATED");
   const [loading, setLoading] = React.useState(true);
+  const { userData } = React.useContext(UserContext);
 
   React.useEffect(() => {
     const fetchData = async () => {
       const nominatedAlbums = await getNominatedAlbums([
-        "nomination-global-2020",
-        "nomination-czech-2020",
+        "nomination-global-2021",
+        "nomination-czech-2021",
       ]);
       setNominatedAlbums(nominatedAlbums.data);
 
@@ -58,11 +61,15 @@ export const NominatedAlbumsList: React.FC = () => {
           value={submenu}
           onChange={handleChangeTable}
         >
-          <FormControlLabel
-            value="RESULTS"
-            control={<Radio />}
-            label="Seřazené výsledky"
-          />
+          {userData?.user ? (
+            isAdmin(userData?.user?.role) ? (
+              <FormControlLabel
+                value="RESULTS"
+                control={<Radio />}
+                label="Seřazené výsledky"
+              />
+            ) : null
+          ) : null}
           <FormControlLabel
             value="NOMINATED"
             control={<Radio />}
@@ -77,7 +84,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <NominatedAlbumsListTable
             results={
               nominatedAlbums.filter(
-                (vote) => vote.type === "nomination-global-2020"
+                (vote) => vote.type === "nomination-global-2021"
               )[0]?.results ?? []
             }
           />
@@ -85,7 +92,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <NominatedAlbumsListTable
             results={
               nominatedAlbums.filter(
-                (vote) => vote.type === "nomination-czech-2020"
+                (vote) => vote.type === "nomination-czech-2021"
               )[0]?.results ?? []
             }
           />{" "}
@@ -98,7 +105,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <ResultsListTable
             results={
               results.filter(
-                (vote) => vote.type === "nomination-global-2020"
+                (vote) => vote.type === "nomination-global-2021"
               )[0]?.results ?? []
             }
             showWriteColumn={false}
@@ -107,7 +114,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <h2>Česká alba</h2>
           <ResultsListTable
             results={
-              results.filter((vote) => vote.type === "nomination-czech-2020")[0]
+              results.filter((vote) => vote.type === "nomination-czech-2021")[0]
                 ?.results ?? []
             }
             showWriteColumn={false}

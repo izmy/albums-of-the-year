@@ -64,8 +64,8 @@ export const Nominate: React.FC = () => {
       const fetchData = async () => {
         if (userData?.user === undefined) return;
         const oldVotes = await getUserVotes(userData.user._id, [
-          "nomination-global-2020",
-          "nomination-czech-2020",
+          "nomination-global-2021",
+          "nomination-czech-2021",
         ]);
 
         if (oldVotes.data.length > 0) {
@@ -92,8 +92,8 @@ export const Nominate: React.FC = () => {
 
     try {
       const saveVotesResult = await saveVotes(votes, [
-        "nomination-global-2020",
-        "nomination-czech-2020",
+        "nomination-global-2021",
+        "nomination-czech-2021",
       ]);
       if (saveVotesResult.status === 200) {
         setVoteStatus("success");

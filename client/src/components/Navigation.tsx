@@ -69,13 +69,12 @@ export const Navigation: React.FC<NavigationProps> = ({ role }) => {
   return (
     <nav>
       <NavigationList>
-        {isAdmin(role) ? (
-          <Item>
-            <StyledNavLink exact to="/nominate" activeClassName="active">
-              Nominovat
-            </StyledNavLink>
-          </Item>
-        ) : null}
+        <Item>
+          <StyledNavLink exact to="/nominate" activeClassName="active">
+            Nominovat
+          </StyledNavLink>
+        </Item>
+
         <Item>
           <StyledNavLink exact to="/nominated-albums" activeClassName="active">
             Nominovaná alba
@@ -88,11 +87,13 @@ export const Navigation: React.FC<NavigationProps> = ({ role }) => {
             </StyledNavLink>
           </Item>
         ) : null}
-        <Item>
-          <StyledNavLink exact to="/results" activeClassName="active">
-            Výsledky
-          </StyledNavLink>
-        </Item>
+        {isAdmin(role) ? (
+          <Item>
+            <StyledNavLink exact to="/results" activeClassName="active">
+              Výsledky
+            </StyledNavLink>
+          </Item>
+        ) : null}
         {isAdmin(role) ? (
           <Item>
             <StyledNavLink exact to="/change" activeClassName="active">

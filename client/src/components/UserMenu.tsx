@@ -90,7 +90,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 }) => (
   <UserMenuContainer>
     <UserMenuBox>
-      <IconPhoto src={picture ?? "images/user.jpg"} alt={name} />
+      <IconPhoto src={"images/user.jpg"} alt={name} />
       <UserMenuName>{name}</UserMenuName>
     </UserMenuBox>
     <nav>

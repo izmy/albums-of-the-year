@@ -44,7 +44,7 @@ const PrivateRoute = ({ children, ...rest }) => {
         if (userData?.user !== undefined) {
           if (
             !isAdmin(userData.user?.role ?? []) &&
-            (location.pathname === "/nominate" ||
+            (location.pathname === "/results" ||
               location.pathname === "/voting" ||
               location.pathname === "/change")
           ) {
@@ -140,7 +140,7 @@ const App = () => {
                 <Route path="/login">
                   <Login />
                 </Route>
-                <Redirect exact from="/" to="/results" />
+                <Redirect exact from="/" to="/nominate" />
                 <PrivateRoute path="/">
                   <MainLayout>
                     <NotFound />

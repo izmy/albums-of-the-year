@@ -140,7 +140,7 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
             votes={
               usersVotes
                 ?.find((usersVotes) => usersVotes.user === selectedUser)
-                ?.votes.find((votes) => votes.type === "nomination-global-2020")
+                ?.votes.find((votes) => votes.type === "nomination-global-2021")
                 ?.votes ?? []
             }
           />
@@ -150,7 +150,7 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
             votes={
               usersVotes
                 ?.find((usersVotes) => usersVotes.user === selectedUser)
-                ?.votes.find((votes) => votes.type === "global-2020")?.votes ??
+                ?.votes.find((votes) => votes.type === "global-2021")?.votes ??
               []
             }
           />
@@ -160,7 +160,7 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
             votes={
               usersVotes
                 ?.find((usersVotes) => usersVotes.user === selectedUser)
-                ?.votes.find((votes) => votes.type === "nomination-czech-2020")
+                ?.votes.find((votes) => votes.type === "nomination-czech-2021")
                 ?.votes ?? []
             }
           />
@@ -170,7 +170,7 @@ export const ResultsVoters: React.FC<ResultsVotersProps> = ({ user }) => {
             votes={
               usersVotes
                 ?.find((usersVotes) => usersVotes.user === selectedUser)
-                ?.votes.find((votes) => votes.type === "czech-2020")?.votes ??
+                ?.votes.find((votes) => votes.type === "czech-2021")?.votes ??
               []
             }
           />
