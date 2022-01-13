@@ -62,7 +62,7 @@ export const NominatedAlbumsList: React.FC = () => {
           onChange={handleChangeTable}
         >
           {userData?.user ? (
-            isAdmin(userData?.user?.role) ? (
+            isAdmin(userData?.user?.role) || userData?.phase === "RESULTS" ? (
               <FormControlLabel
                 value="RESULTS"
                 control={<Radio />}

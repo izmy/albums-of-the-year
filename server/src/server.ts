@@ -10,6 +10,7 @@ import UsersRoutes from "./routes/users.routes";
 import VotesRoutes from "./routes/votes.routes";
 import NominatedAlbumsRoutes from "./routes/nominated-albums.routes";
 import ResultsRoutes from "./routes/results.routes";
+import ConstantsRoutes from "./routes/constants.routes";
 
 dotenv.config();
 const app = express();
@@ -24,5 +25,6 @@ app.use("/api/v1/users", UsersRoutes);
 app.use("/api/v1/votes", VotesRoutes);
 app.use("/api/v1/nominated-albums", NominatedAlbumsRoutes);
 app.use("/api/v1/results", ResultsRoutes);
+app.use("/api/v1/constants", ConstantsRoutes);
 
 export default app;

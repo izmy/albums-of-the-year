@@ -15,6 +15,9 @@ import { Results } from "../../models/results.types";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import { ChartType } from "../../models/charts.types";
 
+const GLOBAL_LIMIT = 60;
+const CZECH_LIMIT = 30;
+
 export const Voting: React.FC = () => {
   const { userData } = React.useContext(UserContext);
   const [charts, setCharts] = React.useState(
@@ -72,15 +75,31 @@ export const Voting: React.FC = () => {
         const results = await getResults();
         const topResults = results.data.map((results) => {
           if (results.type === "nomination-global-2021") {
+            const firstRanks = results.results.filter((vote) =>
+              vote.ranks.includes(1)
+            );
+            const nominated = results.results.slice(0, GLOBAL_LIMIT);
+            const finalNomination = [
+              ...Array.from(new Set([...firstRanks, ...nominated])),
+            ];
+
             return {
               ...results,
-              results: results.results.slice(0, 60),
+              results: finalNomination,
             };
           }
           if (results.type === "nomination-czech-2021") {
+            const firstRanks = results.results.filter((vote) =>
+              vote.ranks.includes(1)
+            );
+            const nominated = results.results.slice(0, CZECH_LIMIT);
+            const finalNomination = [
+              ...Array.from(new Set([...firstRanks, ...nominated])),
+            ];
+
             return {
               ...results,
-              results: results.results.slice(0, 30),
+              results: finalNomination,
             };
           }
           return results;

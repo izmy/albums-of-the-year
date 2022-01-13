@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ConstantsPhase } from "./constants.types";
 
 export enum Role {
   ADMIN = "ADMIN",
@@ -17,6 +18,7 @@ export type User = {
 export type UserData = {
   user?: User;
   token?: string;
+  phase?: ConstantsPhase;
 };
 
 export type UserList = { [key: string]: User };

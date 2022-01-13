@@ -25,6 +25,7 @@ import { Nominate } from "./routes/Nominate/Nominate";
 import { NominatedAlbumsList } from "./routes/NominatedAlbums/NominatedAlbums";
 import { Settings } from "./routes/Settings/Settings";
 import { isAdmin } from "./utils/users.utils";
+import { getConstants } from "./services/api/constantsApi";
 
 const theme = createMuiTheme({
   palette: {
@@ -42,11 +43,21 @@ const PrivateRoute = ({ children, ...rest }) => {
       {...rest}
       render={({ location }) => {
         if (userData?.user !== undefined) {
+          if (isAdmin(userData.user?.role)) {
+            return children;
+          }
+
+          const NOMINATION_DISABLED = ["/voting", "/results", "/change"];
+          const VOTING_DISABLED = ["/nominate", "/results", "/change"];
+          const RESULTS_DISABLED = ["/nominate", "/voting", "/change"];
+
           if (
-            !isAdmin(userData.user?.role ?? []) &&
-            (location.pathname === "/results" ||
-              location.pathname === "/voting" ||
-              location.pathname === "/change")
+            (userData.phase === "NOMINATION" &&
+              NOMINATION_DISABLED.includes(location.pathname)) ||
+            (userData.phase === "VOTING" &&
+              VOTING_DISABLED.includes(location.pathname)) ||
+            (userData.phase === "RESULTS" &&
+              RESULTS_DISABLED.includes(location.pathname))
           ) {
             return (
               <Redirect
@@ -57,6 +68,7 @@ const PrivateRoute = ({ children, ...rest }) => {
               />
             );
           }
+
           return children;
         }
         return (
@@ -87,9 +99,12 @@ const App = () => {
       const tokenResponse = await authorize(token);
       if (tokenResponse) {
         const loggedUser = await getUser();
+        const constants = await getConstants();
+
         setUserData({
           token,
           user: loggedUser,
+          phase: constants.phase,
         });
       }
       setLoading(false);
@@ -140,7 +155,13 @@ const App = () => {
                 <Route path="/login">
                   <Login />
                 </Route>
-                <Redirect exact from="/" to="/nominate" />
+                {userData.phase === "NOMINATION" ? (
+                  <Redirect exact from="/" to="/nominate" />
+                ) : userData.phase === "VOTING" ? (
+                  <Redirect exact from="/" to="/voting" />
+                ) : (
+                  <Redirect exact from="/" to="/results" />
+                )}
                 <PrivateRoute path="/">
                   <MainLayout>
                     <NotFound />

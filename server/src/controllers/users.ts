@@ -20,7 +20,9 @@ export const authorizeController = async (
 
     return res.json(true);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -33,7 +35,9 @@ export const getUser = async (
 
     return res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -63,7 +67,9 @@ export const getAllUsers = async (
       .status(401)
       .json({ msg: "Endpoint is only available to the admin." });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -98,7 +104,9 @@ export const createUser = async (
       });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };
 
@@ -128,7 +136,7 @@ export const patchUser = async (
 
   try {
     const user = await User.findOne({ _id: req.params.userId });
-    const newUser = { ...user.toObject(), ...req.body };
+    const newUser = { ...user!.toObject(), ...req.body };
     await User.updateOne({ _id: req.params.userId }, newUser);
 
     return res.sendStatus(200);

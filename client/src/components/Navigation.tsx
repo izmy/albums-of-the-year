@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Role } from "../models/user.types";
 import { isAdmin } from "../utils/users.utils";
+import { ConstantsPhase } from "../models/constants.types";
 
 export const NavigationList = styled.ul`
   margin: 0;
@@ -63,31 +64,42 @@ export const StyledNavLink = styled(NavLink)`
 
 interface NavigationProps {
   role: Role[];
+  phase?: ConstantsPhase | null;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ role }) => {
+export const Navigation: React.FC<NavigationProps> = ({ role, phase }) => {
   return (
     <nav>
       <NavigationList>
-        <Item>
-          <StyledNavLink exact to="/nominate" activeClassName="active">
-            Nominovat
-          </StyledNavLink>
-        </Item>
-
-        <Item>
-          <StyledNavLink exact to="/nominated-albums" activeClassName="active">
-            Nominovaná alba
-          </StyledNavLink>
-        </Item>
-        {isAdmin(role) ? (
+        {isAdmin(role) || phase === "NOMINATION" ? (
+          <Item>
+            <StyledNavLink exact to="/nominate" activeClassName="active">
+              Nominovat
+            </StyledNavLink>
+          </Item>
+        ) : null}
+        {isAdmin(role) ||
+        phase === "NOMINATION" ||
+        phase === "VOTING" ||
+        phase === "RESULTS" ? (
+          <Item>
+            <StyledNavLink
+              exact
+              to="/nominated-albums"
+              activeClassName="active"
+            >
+              Nominovaná alba
+            </StyledNavLink>
+          </Item>
+        ) : null}
+        {isAdmin(role) || phase === "VOTING" ? (
           <Item>
             <StyledNavLink exact to="/voting" activeClassName="active">
               Hlasovat
             </StyledNavLink>
           </Item>
         ) : null}
-        {isAdmin(role) ? (
+        {isAdmin(role) || phase === "RESULTS" ? (
           <Item>
             <StyledNavLink exact to="/results" activeClassName="active">
               Výsledky

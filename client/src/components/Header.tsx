@@ -46,7 +46,10 @@ export const Header = () => {
         </Link>
       </LogoContainer>
       {userData?.user !== undefined ? (
-        <Navigation role={userData.user?.role ?? []} />
+        <Navigation
+          role={userData.user?.role ?? []}
+          phase={userData.phase ?? null}
+        />
       ) : null}
     </StyledHeader>
   );

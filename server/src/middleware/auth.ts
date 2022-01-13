@@ -36,6 +36,8 @@ export const auth = async (
     req.verifiedUser = verified;
     next();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };

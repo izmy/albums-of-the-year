@@ -216,7 +216,7 @@ export const getUsersResults = async (
     {
       $match: user?.role.includes(Role.ADMIN)
         ? {}
-        : { $or: [{ "user.showVotes": true }, { "user._id": user._id }] },
+        : { $or: [{ "user.showVotes": true }, { "user._id": user!._id }] },
     },
     {
       $sort: {
