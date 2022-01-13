@@ -1,6 +1,8 @@
-import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 import StravaRoutes from "./routes/strava.routes";
 import SpotifyRoutes from "./routes/spotify.routes";
@@ -12,7 +14,6 @@ import NominatedAlbumsRoutes from "./routes/nominated-albums.routes";
 import ResultsRoutes from "./routes/results.routes";
 import ConstantsRoutes from "./routes/constants.routes";
 
-dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
