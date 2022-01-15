@@ -6,10 +6,16 @@ import {
   RadioGroup,
 } from "@material-ui/core";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { NominatedAlbums } from "../../models/nominatedAlbums.types";
+import {
+  NominatedAlbum,
+  NominatedAlbums,
+} from "../../models/nominatedAlbums.types";
 import { Results } from "../../models/results.types";
 import { getNominatedAlbums } from "../../services/api/nominatedAlbumsApi";
-import { getResults } from "../../services/api/resultsApi";
+import {
+  getResults,
+  getResultsWithParams,
+} from "../../services/api/resultsApi";
 import { ResultsListTable } from "../Results/ResultsListTable";
 import { NominatedAlbumsListTable } from "./NominatedAlbumsTable";
 import { isAdmin } from "../../utils/users.utils";
@@ -20,6 +26,9 @@ export const NominatedAlbumsList: React.FC = () => {
   const [nominatedAlbums, setNominatedAlbums] = React.useState<
     NominatedAlbums[]
   >([]);
+  const [votingGlobal, setVotingGlobal] = React.useState<NominatedAlbum[]>([]);
+  const [votingCzech, setVotingCzech] = React.useState<NominatedAlbum[]>([]);
+
   const [submenu, setSubmenu] = React.useState("NOMINATED");
   const [loading, setLoading] = React.useState(true);
   const { userData } = React.useContext(UserContext);
@@ -34,6 +43,20 @@ export const NominatedAlbumsList: React.FC = () => {
 
       const results = await getResults();
       setResults(results.data);
+
+      const votingGlobal = await getResultsWithParams({
+        type: "nomination-global-2021",
+        limit: 60,
+        includeFirst: true,
+      });
+      setVotingGlobal(votingGlobal.data);
+
+      const votingCzech = await await getResultsWithParams({
+        type: "nomination-czech-2021",
+        limit: 30,
+        includeFirst: true,
+      });
+      setVotingCzech(votingCzech.data);
 
       setLoading(false);
     };
@@ -61,6 +84,16 @@ export const NominatedAlbumsList: React.FC = () => {
           value={submenu}
           onChange={handleChangeTable}
         >
+          <FormControlLabel
+            value="NOMINATED"
+            control={<Radio />}
+            label="Abecední seznam"
+          />
+          <FormControlLabel
+            value="VOTING"
+            control={<Radio />}
+            label="Postupující alba"
+          />
           {userData?.user ? (
             isAdmin(userData?.user?.role) || userData?.phase === "RESULTS" ? (
               <FormControlLabel
@@ -70,11 +103,6 @@ export const NominatedAlbumsList: React.FC = () => {
               />
             ) : null
           ) : null}
-          <FormControlLabel
-            value="NOMINATED"
-            control={<Radio />}
-            label="Abecední seznam"
-          />
         </RadioGroup>
       </FormControl>
 
@@ -96,6 +124,15 @@ export const NominatedAlbumsList: React.FC = () => {
               )[0]?.results ?? []
             }
           />{" "}
+        </>
+      ) : null}
+
+      {submenu === "VOTING" ? (
+        <>
+          <h2>Zahraniční alba</h2>
+          <NominatedAlbumsListTable results={votingGlobal} />
+          <h2>Česká alba</h2>
+          <NominatedAlbumsListTable results={votingCzech} />{" "}
         </>
       ) : null}
 

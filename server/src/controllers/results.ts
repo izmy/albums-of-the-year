@@ -127,6 +127,146 @@ export const getResults = async (
   res.json(votes);
 };
 
+export const getResultsWithParams = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const type = req.query.type;
+  const limit = Number(req.query.limit);
+  const includeFirst =
+    req.query.includeFirst === "true" || req.query.includeFirst === "false"
+      ? req.query.includeFirst === "true"
+      : null;
+
+  if (type === undefined || isNaN(limit) || includeFirst === null) {
+    return res.status(401).json({
+      msg: "All query parameters 'type', 'limit', 'includeFirst' are required",
+    });
+  }
+
+  try {
+    const votes = await Vote.aggregate([
+      {
+        $match: {
+          type,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+        },
+      },
+      {
+        $project: {
+          type: 1,
+          points: 1,
+          artist: 1,
+          album: 1,
+          rank: 1,
+          writeByUser: {
+            $cond: {
+              if: "$write",
+              then: "$user.name",
+              else: null,
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          rank: 1,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            artist: "$artist",
+            album: "$album",
+            type: "$type",
+          },
+          artist: {
+            $first: "$artist",
+          },
+          album: {
+            $first: "$album",
+          },
+          ranks: {
+            $push: "$rank",
+          },
+          points: {
+            $sum: "$points",
+          },
+          countOfVoters: {
+            $sum: 1,
+          },
+          type: {
+            $first: "$type",
+          },
+          writeByUser: {
+            $push: "$writeByUser",
+          },
+        },
+      },
+      {
+        $project: {
+          points: 1,
+          artist: 1,
+          album: 1,
+          ranks: 1,
+          countOfVoters: 1,
+          writeByUser: {
+            $arrayElemAt: [
+              {
+                $filter: {
+                  input: "$writeByUser",
+                  as: "a",
+                  cond: { $ne: ["$$a", null] },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+      {
+        $sort: {
+          points: -1,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ]);
+
+    const votesOffset = votes.slice(0, limit);
+    let finalVotes;
+
+    if (includeFirst) {
+      const firstRanks = votes.filter((vote) => vote.ranks.includes(1));
+      finalVotes = [...Array.from(new Set([...firstRanks, ...votesOffset]))];
+    } else {
+      finalVotes = votesOffset;
+    }
+
+    const sortedFinalVotes = finalVotes.sort((a, b) =>
+      a.artist.localeCompare(b.artist)
+    );
+    res.json(sortedFinalVotes);
+  } catch (err) {
+    return res.status(400).json({ error: "Something went wrong..." });
+  }
+};
+
 export const getUsersVotesCount = async (
   req: express.Request,
   res: express.Response
