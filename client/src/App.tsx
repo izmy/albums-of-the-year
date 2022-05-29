@@ -26,6 +26,7 @@ import { NominatedAlbumsList } from "./routes/NominatedAlbums/NominatedAlbums";
 import { Settings } from "./routes/Settings/Settings";
 import { isAdmin } from "./utils/users.utils";
 import { getConstants } from "./services/api/constantsApi";
+import { PrivacyPolicy } from "./routes/PrivacyPolicy/PrivacyPolicy";
 
 const theme = createMuiTheme({
   palette: {
@@ -154,6 +155,11 @@ const App = () => {
                 </PrivateRoute>
                 <Route path="/login">
                   <Login />
+                </Route>
+                <Route path="/privacy-policy">
+                  <MainLayout>
+                    <PrivacyPolicy />
+                  </MainLayout>
                 </Route>
                 {userData.phase === "NOMINATION" ? (
                   <Redirect exact from="/" to="/nominate" />
