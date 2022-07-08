@@ -1,7 +1,7 @@
 import { Button, CircularProgress, TextField } from "@material-ui/core";
 import * as React from "react";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
-import { useHistory, useLocation } from "react-router-dom";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Logo } from "../../components/Logo";
 import { loginUser, loginUserFacebook } from "../../services/api/loginApi";
@@ -96,6 +96,11 @@ export const StyledTextField = styled(TextField)`
       display: none;
     }
   }
+`;
+
+export const StyledNavLink = styled(NavLink)`
+  margin-top: 10px;
+  color: black;
 `;
 
 export const Login: React.FC = () => {
@@ -229,6 +234,7 @@ export const Login: React.FC = () => {
           ? "Máte účet? Přihlašte se."
           : "Nemáte účet? Vytvořte si účet."}
       </RegisterLink>
+      <StyledNavLink to="privacy-policy">Privacy policy</StyledNavLink>
     </LoginContainer>
   );
 };
