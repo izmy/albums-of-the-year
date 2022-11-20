@@ -74,7 +74,7 @@ export const Voting: React.FC = () => {
       const fetchData = async () => {
         const results = await getResults();
         const topResults = results.data.map((results) => {
-          if (results.type === "nomination-global-2021") {
+          if (results.type === "nomination-global-2022") {
             const firstRanks = results.results.filter((vote) =>
               vote.ranks.includes(1)
             );
@@ -88,7 +88,7 @@ export const Voting: React.FC = () => {
               results: finalNomination,
             };
           }
-          if (results.type === "nomination-czech-2021") {
+          if (results.type === "nomination-czech-2022") {
             const firstRanks = results.results.filter((vote) =>
               vote.ranks.includes(1)
             );
@@ -109,8 +109,8 @@ export const Voting: React.FC = () => {
 
         if (userData?.user === undefined) return;
         const oldVotes = await getUserVotes(userData.user._id, [
-          "global-2021",
-          "czech-2021",
+          "global-2022",
+          "czech-2022",
         ]);
 
         if (oldVotes.data.length > 0) {
@@ -138,8 +138,8 @@ export const Voting: React.FC = () => {
       window.confirm("Chcete načíst své nominace do formuláře?")
     ) {
       const nominationVotes = await getUserVotes(userData.user._id, [
-        "nomination-global-2021",
-        "nomination-czech-2021",
+        "nomination-global-2022",
+        "nomination-czech-2022",
       ]);
 
       const cleanNominationVotes = nominationVotes.data.map((vote) => ({
@@ -148,7 +148,7 @@ export const Voting: React.FC = () => {
       }));
 
       const globalNomination = nominatedAlbumsResults
-        .find((albums) => albums.type === "nomination-global-2021")
+        .find((albums) => albums.type === "nomination-global-2022")
         ?.results.map((vote) => ({
           artist: vote.artist,
           album: vote.album,
@@ -160,11 +160,11 @@ export const Voting: React.FC = () => {
           ...item,
           rank: index + 1,
           write: false,
-          type: "global-2021" as ChartType,
+          type: "global-2022" as ChartType,
         }));
 
       const czechNomination = nominatedAlbumsResults
-        .find((albums) => albums.type === "nomination-czech-2021")
+        .find((albums) => albums.type === "nomination-czech-2022")
         ?.results.map((vote) => ({
           artist: vote.artist,
           album: vote.album,
@@ -176,12 +176,12 @@ export const Voting: React.FC = () => {
           ...item,
           rank: index + 1,
           write: false,
-          type: "czech-2021" as ChartType,
+          type: "czech-2022" as ChartType,
         }));
 
       setCharts((charts) => {
         return charts.map((chart) => {
-          if (chart.type === "global-2021") {
+          if (chart.type === "global-2022") {
             const items = chart.items.map((item, index) => {
               if (intersectionGlobalNomination[index] !== undefined) {
                 return intersectionGlobalNomination[index];
@@ -190,7 +190,7 @@ export const Voting: React.FC = () => {
             });
             chart.items = items;
           }
-          if (chart.type === "czech-2021") {
+          if (chart.type === "czech-2022") {
             const items = chart.items.map((item, index) => {
               if (intersectionCzechNomination[index] !== undefined) {
                 return intersectionCzechNomination[index];
@@ -210,8 +210,8 @@ export const Voting: React.FC = () => {
 
     try {
       const saveVotesResult = await saveVotes(votes, [
-        "global-2021",
-        "czech-2021",
+        "global-2022",
+        "czech-2022",
       ]);
       if (saveVotesResult.status === 200) {
         setVoteStatus("success");
@@ -246,7 +246,7 @@ export const Voting: React.FC = () => {
           items={charts[0].items}
           nominatedAlbumsResults={
             nominatedAlbumsResults
-              .find((vote) => vote.type === "nomination-global-2021")
+              .find((vote) => vote.type === "nomination-global-2022")
               ?.results.sort((a, b) => a.artist.localeCompare(b.artist)) ?? []
           }
           onSetVotingList={handleSetChart}
@@ -257,7 +257,7 @@ export const Voting: React.FC = () => {
           items={charts[1].items}
           nominatedAlbumsResults={
             nominatedAlbumsResults
-              .find((vote) => vote.type === "nomination-czech-2021")
+              .find((vote) => vote.type === "nomination-czech-2022")
               ?.results.sort((a, b) => a.artist.localeCompare(b.artist)) ?? []
           }
           onSetVotingList={handleSetChart}

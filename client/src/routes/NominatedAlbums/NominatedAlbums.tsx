@@ -36,8 +36,8 @@ export const NominatedAlbumsList: React.FC = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       const nominatedAlbums = await getNominatedAlbums([
-        "nomination-global-2021",
-        "nomination-czech-2021",
+        "nomination-global-2022",
+        "nomination-czech-2022",
       ]);
       setNominatedAlbums(nominatedAlbums.data);
 
@@ -45,14 +45,14 @@ export const NominatedAlbumsList: React.FC = () => {
       setResults(results.data);
 
       const votingGlobal = await getResultsWithParams({
-        type: "nomination-global-2021",
+        type: "nomination-global-2022",
         limit: 60,
         includeFirst: true,
       });
       setVotingGlobal(votingGlobal.data);
 
       const votingCzech = await await getResultsWithParams({
-        type: "nomination-czech-2021",
+        type: "nomination-czech-2022",
         limit: 30,
         includeFirst: true,
       });
@@ -112,7 +112,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <NominatedAlbumsListTable
             results={
               nominatedAlbums.filter(
-                (vote) => vote.type === "nomination-global-2021"
+                (vote) => vote.type === "nomination-global-2022"
               )[0]?.results ?? []
             }
           />
@@ -120,7 +120,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <NominatedAlbumsListTable
             results={
               nominatedAlbums.filter(
-                (vote) => vote.type === "nomination-czech-2021"
+                (vote) => vote.type === "nomination-czech-2022"
               )[0]?.results ?? []
             }
           />{" "}
@@ -142,7 +142,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <ResultsListTable
             results={
               results.filter(
-                (vote) => vote.type === "nomination-global-2021"
+                (vote) => vote.type === "nomination-global-2022"
               )[0]?.results ?? []
             }
             showWriteColumn={false}
@@ -151,7 +151,7 @@ export const NominatedAlbumsList: React.FC = () => {
           <h2>Česká alba</h2>
           <ResultsListTable
             results={
-              results.filter((vote) => vote.type === "nomination-czech-2021")[0]
+              results.filter((vote) => vote.type === "nomination-czech-2022")[0]
                 ?.results ?? []
             }
             showWriteColumn={false}

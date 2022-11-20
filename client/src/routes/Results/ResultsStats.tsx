@@ -53,19 +53,19 @@ export const ResultsStats: React.FC = () => {
                 <StyledTableCell scope="row">{u.user}</StyledTableCell>
                 <StyledTableCell scope="row">
                   {u.votes.find(
-                    (vote) => vote.type === "nomination-global-2021"
+                    (vote) => vote.type === "nomination-global-2022"
                   )?.count ?? 0}
                 </StyledTableCell>
                 <StyledTableCell scope="row">
-                  {u.votes.find((vote) => vote.type === "global-2021")?.count ??
+                  {u.votes.find((vote) => vote.type === "global-2022")?.count ??
                     0}
                 </StyledTableCell>
                 <StyledTableCell scope="row">
-                  {u.votes.find((vote) => vote.type === "nomination-czech-2021")
+                  {u.votes.find((vote) => vote.type === "nomination-czech-2022")
                     ?.count ?? 0}
                 </StyledTableCell>
                 <StyledTableCell scope="row">
-                  {u.votes.find((vote) => vote.type === "czech-2021")?.count ??
+                  {u.votes.find((vote) => vote.type === "czech-2022")?.count ??
                     0}
                 </StyledTableCell>
               </StyledTableRow>
@@ -79,7 +79,7 @@ export const ResultsStats: React.FC = () => {
                   {usersVotesCount.reduce((acc, curr) => {
                     const count =
                       curr.votes?.find(
-                        (v) => v.type === "nomination-global-2021"
+                        (v) => v.type === "nomination-global-2022"
                       )?.count ?? 0;
                     return acc + count;
                   }, 0)}
@@ -89,7 +89,7 @@ export const ResultsStats: React.FC = () => {
                 <strong>
                   {usersVotesCount.reduce((acc, curr) => {
                     const count =
-                      curr.votes?.find((v) => v.type === "global-2021")
+                      curr.votes?.find((v) => v.type === "global-2022")
                         ?.count ?? 0;
                     return acc + count;
                   }, 0)}
@@ -100,7 +100,7 @@ export const ResultsStats: React.FC = () => {
                   {usersVotesCount.reduce((acc, curr) => {
                     const count =
                       curr.votes?.find(
-                        (v) => v.type === "nomination-czech-2021"
+                        (v) => v.type === "nomination-czech-2022"
                       )?.count ?? 0;
                     return acc + count;
                   }, 0)}
@@ -110,7 +110,7 @@ export const ResultsStats: React.FC = () => {
                 <strong>
                   {usersVotesCount.reduce((acc, curr) => {
                     const count =
-                      curr.votes?.find((v) => v.type === "czech-2021")?.count ??
+                      curr.votes?.find((v) => v.type === "czech-2022")?.count ??
                       0;
                     return acc + count;
                   }, 0)}
