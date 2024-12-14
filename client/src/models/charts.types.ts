@@ -4,10 +4,10 @@ export type ChartType =
   | "global"
   | "czech"
   | "test"
-  | "nomination-global-2023"
-  | "nomination-czech-2023"
-  | "global-2023"
-  | "czech-2023";
+  | "nomination-global-2024"
+  | "nomination-czech-2024"
+  | "global-2024"
+  | "czech-2024";
 
 export type Chart = {
   title: string;

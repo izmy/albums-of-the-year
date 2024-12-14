@@ -1,13 +1,13 @@
 import { ChartParameters } from "../models/charts.types";
 
 export const nominationChartsParameters: ChartParameters[] = [
-  { title: "Zahraniční alba", type: "nomination-global-2023", size: 40 },
-  { title: "Česká alba", type: "nomination-czech-2023", size: 20 },
+  { title: "Zahraniční alba", type: "nomination-global-2024", size: 40 },
+  { title: "Česká alba", type: "nomination-czech-2024", size: 20 },
 ];
 
 export const chartsParameters: ChartParameters[] = [
-  { title: "Zahraniční alba", type: "global-2023", size: 40 },
-  { title: "Česká alba", type: "czech-2023", size: 20 },
+  { title: "Zahraniční alba", type: "global-2024", size: 40 },
+  { title: "Česká alba", type: "czech-2024", size: 20 },
 ];
 
 export const deadline = {

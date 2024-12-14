@@ -74,7 +74,7 @@ export const ResultsList: React.FC = () => {
             <h2>Zahraniční alba</h2>
             <ResultsListTable
               results={
-                results.filter((vote) => vote.type === "global-2023")[0]
+                results.filter((vote) => vote.type === "global-2024")[0]
                   ?.results ?? []
               }
               showWriteColumn={true}
@@ -83,7 +83,7 @@ export const ResultsList: React.FC = () => {
             <h2>Česká alba</h2>
             <ResultsListTable
               results={
-                results.filter((vote) => vote.type === "czech-2023")[0]
+                results.filter((vote) => vote.type === "czech-2024")[0]
                   ?.results ?? []
               }
               showWriteColumn={true}
