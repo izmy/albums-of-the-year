@@ -1,5 +1,5 @@
-import * as express from "express";
-import bcrypt from "bcrypt";
+import type * as express from "express";
+import md5 from "md5";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import User from "../models/user.types";
@@ -64,13 +64,13 @@ export const loginController = async (
     }
 
     if (user.password === undefined) {
-      return res.status(400).json({ msg: `Přihlašte se přes Facebook.` });
+      return res.status(400).json({ msg: "Přihlašte se přes Facebook." });
     }
 
-    const validPassword = await bcrypt.compare(password, user.password);
+    const hashedPassword = md5(password);
 
-    if (!validPassword) {
-      return res.status(400).json({ msg: `Zadané heslo je neplatné.` });
+    if (hashedPassword !== user.password) {
+      return res.status(400).json({ msg: "Zadané heslo je neplatné." });
     }
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY ?? "");

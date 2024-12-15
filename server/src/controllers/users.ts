@@ -1,8 +1,8 @@
-import * as express from "express";
-import bcrypt from "bcrypt";
+import type * as express from "express";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User, { Role } from "../models/user.types";
-import { RequestWithVerifiedUserData } from "../middleware/auth";
+import type { RequestWithVerifiedUserData } from "../middleware/auth";
 
 export const authorizeController = async (
   req: express.Request,
@@ -84,25 +84,25 @@ export const createUser = async (
 
     if (emailExist !== null) {
       return res.status(400).json({ msg: "Účet s tímto emailem už existuje." });
-    } else {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      const role = [] as Role[];
-      const newUser = new User({ name, email, password: hashedPassword, role });
-      newUser.save((err, data) => {
-        if (err) {
-          return res.status(400).json({ error: "Something went wrong..." });
-        }
-        const token = jwt.sign(
-          { _id: data._id },
-          process.env.JWT_SECRET_KEY ?? ""
-        );
-        return res.json({
-          token,
-          user: { _id: newUser._id, name, email, role },
-        });
-      });
     }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const role = [] as Role[];
+    const newUser = new User({ name, email, password: hashedPassword, role });
+    newUser.save((err, data) => {
+      if (err) {
+        return res.status(400).json({ error: "Something went wrong..." });
+      }
+      const token = jwt.sign(
+        { _id: data._id },
+        process.env.JWT_SECRET_KEY ?? ""
+      );
+      return res.json({
+        token,
+        user: { _id: newUser._id, name, email, role },
+      });
+    });
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).json({ error: err.message });

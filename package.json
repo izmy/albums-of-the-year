@@ -18,8 +18,7 @@
     "build:merge": "cpr server/dist dist && cpr client/build dist/public",
     "clear": "yarn rimraf dist",
     "client": "yarn workspace albums-of-the-year-client",
-    "server": "yarn workspace albums-of-the-year-server",
-    "heroku": "git push heroku `git subtree split --prefix server main`:main --force"
+    "server": "yarn workspace albums-of-the-year-server"
   },
   "devDependencies": {
     "cpr": "3.0.1",
