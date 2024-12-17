@@ -1,15 +1,11 @@
 import { Button, CircularProgress, TextField } from "@material-ui/core";
 import * as React from "react";
-import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { NavLink, useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Logo } from "../../components/Logo";
-import { loginUser, loginUserFacebook } from "../../services/api/loginApi";
-import { registerUser } from "../../services/api/usersApi";
+import { loginUser } from "../../services/api/loginApi";
 import { UserContext } from "../../services/UserContext";
-import { validateEmail } from "../../utils/email.utils";
 import { LoginForm } from "./LoginForm";
-import { RegisterForm } from "./RegisterForm";
 
 const LoginContainer = styled.div`
   height: 100vh;
@@ -35,23 +31,6 @@ const LoginBox = styled.div`
 
 const LoadingContainer = styled.div`
   margin-top: 3rem;
-`;
-
-const RegisterLink = styled.div`
-  margin-top: 20px;
-  text-decoration: underline;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const Line = styled.hr`
-  width: 70%;
-  border: 0;
-  margin: 30px auto;
-  height: 2px;
-  background: white;
 `;
 
 const ErrorMessage = styled.p`
@@ -108,36 +87,14 @@ export const Login: React.FC = () => {
   const { state } = useLocation<{ from: string }>();
   const history = useHistory();
   const [loading, setLoading] = React.useState(false);
-  const [registerForm, setRegisterForm] = React.useState(false);
   const [error, setError] = React.useState("");
 
-  const handleFacebookLogin = async (userInfo: ReactFacebookLoginInfo) => {
-    if (userInfo.email) {
-      setLoading(true);
-      try {
-        const loggedUser = await loginUserFacebook(userInfo);
-
-        if (loggedUser.token === undefined || loggedUser.user === undefined)
-          throw new Error("missing token and user data");
-
-        localStorage.setItem("auth-token", loggedUser.token);
-        setUserData({
-          token: loggedUser.token,
-          user: loggedUser.user,
-        });
-      } catch (err) {
-        setError(err.message);
-      }
-    }
-    setLoading(false);
-  };
-
-  const handleLogin = async (email: string, password: string) => {
-    if (email !== "" && password !== "") {
+  const handleLogin = async (login: string, password: string) => {
+    if (login !== "" && password !== "") {
       setError("");
       setLoading(true);
       try {
-        const loggedUser = await loginUser(email, password);
+        const loggedUser = await loginUser(login, password);
         if (loggedUser.token === undefined || loggedUser.user === undefined)
           throw new Error("missing token and user data");
 
@@ -146,44 +103,11 @@ export const Login: React.FC = () => {
           token: loggedUser.token,
           user: loggedUser.user,
         });
-      } catch (err) {
+      } catch (err: any) {
         setError(err.response.data.msg);
       }
     } else {
-      setError("Vyplňte email a heslo.");
-    }
-    setLoading(false);
-  };
-
-  const handleRegister = async (
-    name: string,
-    email: string,
-    password: string
-  ) => {
-    if (name !== "" && email !== "" && password !== "") {
-      if (!validateEmail(email)) {
-        setError("E-mail není ve správném formátu.");
-        return;
-      }
-
-      setError("");
-      setLoading(true);
-
-      try {
-        const loggedUser = await registerUser(name, email, password);
-        if (loggedUser.token === undefined || loggedUser.user === undefined)
-          throw new Error("missing token and user data");
-
-        localStorage.setItem("auth-token", loggedUser.token);
-        setUserData({
-          token: loggedUser.token,
-          user: loggedUser.user,
-        });
-      } catch (err) {
-        setError(err.response.data.msg);
-      }
-    } else {
-      setError("Vyplňte jméno, email a heslo.");
+      setError("Vyplňte login a heslo.");
     }
     setLoading(false);
   };
@@ -198,30 +122,7 @@ export const Login: React.FC = () => {
     <LoginContainer>
       <LoginBox>
         <Logo maxWidth={300} animation={false} />
-        {registerForm ? (
-          <RegisterForm onRegister={handleRegister} />
-        ) : (
-          <>
-            <FacebookLogin
-              appId="3549360751845020"
-              autoLoad={false}
-              disableMobileRedirect={true}
-              fields="name,email,picture"
-              onClick={() => {}}
-              callback={handleFacebookLogin}
-              textButton={"Přihlásit se přes Facebook"}
-              buttonStyle={{
-                marginTop: "30px",
-                background: "white",
-                color: "#025dbf",
-                borderRadius: "10px",
-                border: "none",
-              }}
-            />
-            <Line />
-            <LoginForm onLogin={handleLogin} />
-          </>
-        )}
+        <LoginForm onLogin={handleLogin} />
         {error !== "" ? <ErrorMessage>{error}</ErrorMessage> : null}
         {loading ? (
           <LoadingContainer>
@@ -229,12 +130,6 @@ export const Login: React.FC = () => {
           </LoadingContainer>
         ) : null}
       </LoginBox>
-      <RegisterLink onClick={() => setRegisterForm((state) => !state)}>
-        {registerForm
-          ? "Máte účet? Přihlašte se."
-          : "Nemáte účet? Vytvořte si účet."}
-      </RegisterLink>
-      <StyledNavLink to="privacy-policy">Privacy policy</StyledNavLink>
     </LoginContainer>
   );
 };

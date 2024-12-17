@@ -3,16 +3,16 @@ import InputIcon from "@material-ui/icons/Input";
 import { LoginButton, LoginItem, LoginTitle, StyledTextField } from "./Login";
 
 interface LoginFormProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: (login: string, password: string) => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
-  const [email, setEmail] = React.useState("");
+  const [login, setLogin] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onLogin(email, password);
+    onLogin(login, password);
   };
 
   return (
@@ -20,10 +20,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       <LoginTitle>Přihlášení</LoginTitle>
       <LoginItem>
         <StyledTextField
-          label="Email"
+          label="Login"
           variant="filled"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          value={login}
+          onChange={(event) => setLogin(event.target.value)}
         />
       </LoginItem>
       <LoginItem>
