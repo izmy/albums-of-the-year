@@ -2,6 +2,7 @@ import type * as express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User, { Role } from "../models/user.types";
+import Constants from "../models/constants.types";
 import type { RequestWithVerifiedUserData } from "../middleware/auth";
 
 export const authorizeController = async (
@@ -12,8 +13,20 @@ export const authorizeController = async (
     const token = req.header("x-auth-token");
     if (!token) return res.json(false);
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY ?? "") as any;
+    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY ?? "") as {
+      _id: string;
+      iat: number;
+    };
     if (!verified) return res.json(false);
+
+    const constants = (await Constants.find())[0].toObject();
+
+    const lastTokenResetDate = new Date(constants.lastTokenReset);
+    const issuedAt = new Date(verified.iat * 1000);
+
+    if (issuedAt.getTime() < lastTokenResetDate.getTime()) {
+      return res.json(false);
+    }
 
     const user = await User.findById({ _id: verified._id });
     if (!user) return res.json(false);
