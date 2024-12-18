@@ -6,6 +6,7 @@ import { Logo } from "../../components/Logo";
 import { loginUser } from "../../services/api/loginApi";
 import { UserContext } from "../../services/UserContext";
 import { LoginForm } from "./LoginForm";
+import { getConstants } from "../../services/api/constantsApi";
 
 const LoginContainer = styled.div`
   height: 100vh;
@@ -95,13 +96,18 @@ export const Login: React.FC = () => {
       setLoading(true);
       try {
         const loggedUser = await loginUser(login, password);
-        if (loggedUser.token === undefined || loggedUser.user === undefined)
+        if (loggedUser.token === undefined || loggedUser.user === undefined) {
           throw new Error("missing token and user data");
+        }
 
         localStorage.setItem("auth-token", loggedUser.token);
+
+        const constants = await getConstants();
+
         setUserData({
           token: loggedUser.token,
           user: loggedUser.user,
+          phase: constants.phase,
         });
       } catch (err: any) {
         setError(err.response.data.msg);
