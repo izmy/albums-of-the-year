@@ -1,8 +1,8 @@
 import { ChartParameters } from "../models/charts.types";
 
 export const nominationChartsParameters: ChartParameters[] = [
-  { title: "Zahraniční alba", type: "nomination-global-2024", size: 40 },
-  { title: "Česká alba", type: "nomination-czech-2024", size: 20 },
+  { title: "Zahraniční alba", type: "nomination-global-2024", size: 10 },
+  { title: "Česká alba", type: "nomination-czech-2024", size: 10 },
 ];
 
 export const chartsParameters: ChartParameters[] = [
