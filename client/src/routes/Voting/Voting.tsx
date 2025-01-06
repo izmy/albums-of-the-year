@@ -15,8 +15,8 @@ import { Results } from "../../models/results.types";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import { ChartType } from "../../models/charts.types";
 
-const GLOBAL_LIMIT = 60;
-const CZECH_LIMIT = 30;
+export const MIN_COUNT_OF_VOTERS = 2;
+export const MIN_POINTS = 5;
 
 export const Voting: React.FC = () => {
   const { userData } = React.useContext(UserContext);
@@ -75,13 +75,12 @@ export const Voting: React.FC = () => {
         const results = await getResults();
         const topResults = results.data.map((results) => {
           if (results.type === "nomination-global-2024") {
-            const firstRanks = results.results.filter((vote) =>
-              vote.ranks.includes(1)
-            );
-            const nominated = results.results.slice(0, GLOBAL_LIMIT);
-            const finalNomination = [
-              ...Array.from(new Set([...firstRanks, ...nominated])),
-            ];
+            const finalNomination = results.results
+              .filter(
+                (vote) =>
+                  vote.countOfVoters >= MIN_COUNT_OF_VOTERS || vote.points >= 5
+              )
+              .sort((a, b) => a.artist.localeCompare(b.artist));
 
             return {
               ...results,
@@ -89,13 +88,12 @@ export const Voting: React.FC = () => {
             };
           }
           if (results.type === "nomination-czech-2024") {
-            const firstRanks = results.results.filter((vote) =>
-              vote.ranks.includes(1)
-            );
-            const nominated = results.results.slice(0, CZECH_LIMIT);
-            const finalNomination = [
-              ...Array.from(new Set([...firstRanks, ...nominated])),
-            ];
+            const finalNomination = results.results
+              .filter(
+                (vote) =>
+                  vote.countOfVoters >= MIN_COUNT_OF_VOTERS || vote.points >= 5
+              )
+              .sort((a, b) => a.artist.localeCompare(b.artist));
 
             return {
               ...results,

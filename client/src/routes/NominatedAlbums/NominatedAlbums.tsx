@@ -12,14 +12,12 @@ import {
 } from "../../models/nominatedAlbums.types";
 import { Results } from "../../models/results.types";
 import { getNominatedAlbums } from "../../services/api/nominatedAlbumsApi";
-import {
-  getResults,
-  getResultsWithParams,
-} from "../../services/api/resultsApi";
+import { getResults } from "../../services/api/resultsApi";
 import { ResultsListTable } from "../Results/ResultsListTable";
 import { NominatedAlbumsListTable } from "./NominatedAlbumsTable";
 import { isAdmin } from "../../utils/users.utils";
 import { UserContext } from "../../services/UserContext";
+import { MIN_COUNT_OF_VOTERS, MIN_POINTS } from "../Voting/Voting";
 
 export const NominatedAlbumsList: React.FC = () => {
   const [results, setResults] = React.useState<Results[]>([]);
@@ -44,19 +42,29 @@ export const NominatedAlbumsList: React.FC = () => {
       const results = await getResults();
       setResults(results.data);
 
-      const votingGlobal = await getResultsWithParams({
-        type: "nomination-global-2024",
-        limit: 60,
-        includeFirst: true,
-      });
-      setVotingGlobal(votingGlobal.data);
+      const votingGlobal =
+        results.data
+          .find((result) => result.type === "nomination-global-2024")
+          ?.results.filter(
+            (vote) =>
+              vote.countOfVoters >= MIN_COUNT_OF_VOTERS ||
+              vote.points >= MIN_POINTS
+          )
+          .sort((a, b) => a.artist.localeCompare(b.artist)) ?? [];
 
-      const votingCzech = await await getResultsWithParams({
-        type: "nomination-czech-2024",
-        limit: 30,
-        includeFirst: true,
-      });
-      setVotingCzech(votingCzech.data);
+      setVotingGlobal(votingGlobal);
+
+      const votingCzech =
+        results.data
+          .find((result) => result.type === "nomination-czech-2024")
+          ?.results.filter(
+            (vote) =>
+              vote.countOfVoters >= MIN_COUNT_OF_VOTERS ||
+              vote.points >= MIN_POINTS
+          )
+          .sort((a, b) => a.artist.localeCompare(b.artist)) ?? [];
+
+      setVotingCzech(votingCzech);
 
       setLoading(false);
     };
@@ -111,17 +119,17 @@ export const NominatedAlbumsList: React.FC = () => {
           <h2>Zahraniční alba</h2>
           <NominatedAlbumsListTable
             results={
-              nominatedAlbums.filter(
-                (vote) => vote.type === "nomination-global-2024"
-              )[0]?.results ?? []
+              nominatedAlbums
+                .filter((vote) => vote.type === "nomination-global-2024")[0]
+                ?.results.sort((a, b) => a.artist.localeCompare(b.artist)) ?? []
             }
           />
           <h2>Česká alba</h2>
           <NominatedAlbumsListTable
             results={
-              nominatedAlbums.filter(
-                (vote) => vote.type === "nomination-czech-2024"
-              )[0]?.results ?? []
+              nominatedAlbums
+                .filter((vote) => vote.type === "nomination-czech-2024")[0]
+                ?.results.sort((a, b) => a.artist.localeCompare(b.artist)) ?? []
             }
           />{" "}
         </>
