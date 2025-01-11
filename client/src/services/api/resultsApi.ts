@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NominatedAlbum } from "../../models/nominatedAlbums.types";
 import { Results } from "../../models/results.types";
+import { UserVotes } from "../../models/votes.types";
 
 export const getResults = () => {
   const token = localStorage.getItem("auth-token");
@@ -52,7 +53,7 @@ export const getUsersVotesCount = () => {
 export const getUsersVotes = () => {
   const token = localStorage.getItem("auth-token");
 
-  return axios.get<any[]>(
+  return axios.get<UserVotes[]>(
     `${process.env.REACT_APP_BACKEND_API_URL}/v1/results/users-votes`,
     {
       headers: {

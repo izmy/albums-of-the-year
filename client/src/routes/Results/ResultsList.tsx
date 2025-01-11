@@ -12,26 +12,70 @@ import { UserContext } from "../../services/UserContext";
 import { ResultsListTable } from "./ResultsListTable";
 import { ResultsStats } from "./ResultsStats";
 import { ResultsVoters } from "./ResultsVoters";
+import { getAllVotes } from "../../services/api/votesApi";
+import { isAdmin } from "../../utils/users.utils";
+import { Vote } from "../../models/votes.types";
+import { getAllUsers } from "../../services/api/usersApi";
+import { UserList } from "../../models/user.types";
 
 export const ResultsList: React.FC = () => {
   const { userData } = React.useContext(UserContext);
   const [results, setResults] = React.useState<Results[]>([]);
+  const [currentVotes, setCurrentVotes] = React.useState<Vote[]>([]);
+  const [users, setUsers] = React.useState<UserList>({});
   const [submenu, setSubmenu] = React.useState("RESULTS");
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const results = await getResults();
-
-      setResults(results.data);
+      loadResults();
+      if (userData?.user && isAdmin(userData?.user?.role)) {
+        loadAllVotes();
+        loadAllUsers();
+      }
       setLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [userData?.user]);
+
+  const loadResults = async () => {
+    const results = await getResults();
+
+    setResults(results.data);
+  };
+
+  const loadAllVotes = async () => {
+    const allVotes = await getAllVotes();
+
+    const currentVotes = allVotes.data.filter(
+      (vote) => vote.type === "global-2024" || vote.type === "czech-2024"
+    );
+
+    setCurrentVotes(currentVotes);
+  };
+
+  const loadAllUsers = async () => {
+    const allUsers = await getAllUsers();
+    const allUsersInObject = allUsers.data.reduce((acc, curr) => {
+      acc[curr._id] = curr;
+
+      return acc;
+    }, {}) as UserList;
+
+    setUsers(allUsersInObject);
+  };
 
   const handleChangeTable = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubmenu((event.target as HTMLInputElement).value);
+  };
+
+  const handleUpdateData = (newVote: Vote) => {
+    loadResults();
+
+    setCurrentVotes((currentVotes) =>
+      currentVotes.map((vote) => (vote._id === newVote._id ? newVote : vote))
+    );
   };
 
   if (loading) {
@@ -77,7 +121,10 @@ export const ResultsList: React.FC = () => {
                 results.filter((vote) => vote.type === "global-2024")[0]
                   ?.results ?? []
               }
+              currentVotes={currentVotes}
+              users={users}
               showWriteColumn={true}
+              onUpdateData={handleUpdateData}
             />
 
             <h2>Česká alba</h2>
@@ -86,7 +133,10 @@ export const ResultsList: React.FC = () => {
                 results.filter((vote) => vote.type === "czech-2024")[0]
                   ?.results ?? []
               }
+              currentVotes={currentVotes}
+              users={users}
               showWriteColumn={true}
+              onUpdateData={handleUpdateData}
             />
           </>
         ) : (

@@ -10,3 +10,12 @@ export type Vote = {
   userId?: string;
   searchText?: string;
 };
+
+export type UserVotes = {
+  user: string;
+  showVote: boolean;
+  votes: {
+    type: ChartType;
+    votes: Vote[];
+  }[];
+};

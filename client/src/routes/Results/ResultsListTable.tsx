@@ -10,15 +10,24 @@ import {
 import { Result } from "../../models/results.types";
 import { StyledTableCell, StyledTableRow } from "../../components/StyledTable";
 import { median } from "../../utils/medial.utils";
+import { Vote } from "../../models/votes.types";
+import { SetWriter } from "./SetWriter";
+import { UserList } from "../../models/user.types";
 
 interface ResultsListTableProps {
   results: Result[];
   showWriteColumn: boolean;
+  currentVotes?: Vote[];
+  users?: UserList;
+  onUpdateData?: (newVote: Vote) => void;
 }
 
 export const ResultsListTable: React.FC<ResultsListTableProps> = ({
   results,
   showWriteColumn,
+  currentVotes,
+  users,
+  onUpdateData,
 }) => {
   return (
     <TableContainer component={Paper}>
@@ -56,7 +65,19 @@ export const ResultsListTable: React.FC<ResultsListTableProps> = ({
               <StyledTableCell scope="row">{result.points}</StyledTableCell>
               {showWriteColumn ? (
                 <StyledTableCell scope="row">
-                  {result.writeByUser !== undefined ? result.writeByUser : "-"}
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    {result.writeByUser !== undefined
+                      ? result.writeByUser
+                      : "-"}
+                    <SetWriter
+                      result={result}
+                      currentVotes={currentVotes ?? []}
+                      users={users ?? {}}
+                      onUpdateData={onUpdateData}
+                    />
+                  </div>
                 </StyledTableCell>
               ) : null}
             </StyledTableRow>
